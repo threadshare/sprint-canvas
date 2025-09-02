@@ -32,7 +32,7 @@ type Client struct {
 // NewClient creates a new LLM client
 func NewClient(provider Provider) (*Client, error) {
 	var apiKey, baseURL, model string
-	
+
 	switch provider {
 	case ProviderOpenAI:
 		apiKey = os.Getenv("OPENAI_API_KEY")
@@ -42,9 +42,9 @@ func NewClient(provider Provider) (*Client, error) {
 		}
 		model = os.Getenv("OPENAI_MODEL")
 		if model == "" {
-			model = "gpt-4-turbo-preview"
+			model = "gpt-4o"
 		}
-		
+
 	case ProviderAnthropic:
 		apiKey = os.Getenv("ANTHROPIC_API_KEY")
 		baseURL = os.Getenv("ANTHROPIC_BASE_URL")
@@ -55,21 +55,21 @@ func NewClient(provider Provider) (*Client, error) {
 		if model == "" {
 			model = "claude-3-opus-20240229"
 		}
-		
+
 	default:
 		return nil, fmt.Errorf("unsupported provider: %s", provider)
 	}
-	
+
 	if apiKey == "" {
 		return nil, fmt.Errorf("%s API key not found in environment", provider)
 	}
-	
+
 	return &Client{
 		provider: provider,
 		apiKey:   apiKey,
 		baseURL:  baseURL,
 		httpClient: &http.Client{
-			Timeout: 60 * time.Second,
+			Timeout: 120 * time.Second, // Increased timeout for slower APIs
 		},
 		model: model,
 	}, nil
@@ -82,11 +82,11 @@ func (c *Client) Complete(ctx context.Context, prompt string, options ...Option)
 		MaxTokens:   1000,
 		Model:       c.model,
 	}
-	
+
 	for _, opt := range options {
 		opt(config)
 	}
-	
+
 	switch c.provider {
 	case ProviderOpenAI:
 		return c.completeOpenAI(ctx, prompt, config)
@@ -104,11 +104,11 @@ func (c *Client) CompleteWithTools(ctx context.Context, prompt string, tools []T
 		MaxTokens:   1000,
 		Model:       c.model,
 	}
-	
+
 	for _, opt := range options {
 		opt(config)
 	}
-	
+
 	switch c.provider {
 	case ProviderOpenAI:
 		return c.completeWithToolsOpenAI(ctx, prompt, tools, config)
@@ -126,11 +126,11 @@ func (c *Client) Stream(ctx context.Context, prompt string, options ...Option) (
 		MaxTokens:   1000,
 		Model:       c.model,
 	}
-	
+
 	for _, opt := range options {
 		opt(config)
 	}
-	
+
 	switch c.provider {
 	case ProviderOpenAI:
 		return c.streamOpenAI(ctx, prompt, config)
@@ -146,44 +146,44 @@ func (c *Client) completeOpenAI(ctx context.Context, prompt string, config *Conf
 	messages := []map[string]string{
 		{"role": "user", "content": prompt},
 	}
-	
+
 	if config.SystemPrompt != "" {
 		messages = append([]map[string]string{
 			{"role": "system", "content": config.SystemPrompt},
 		}, messages...)
 	}
-	
+
 	requestBody := map[string]interface{}{
 		"model":       config.Model,
 		"messages":    messages,
 		"temperature": config.Temperature,
 		"max_tokens":  config.MaxTokens,
 	}
-	
+
 	body, err := json.Marshal(requestBody)
 	if err != nil {
 		return "", fmt.Errorf("failed to marshal request: %w", err)
 	}
-	
+
 	req, err := http.NewRequestWithContext(ctx, "POST", c.baseURL+"/chat/completions", bytes.NewReader(body))
 	if err != nil {
 		return "", fmt.Errorf("failed to create request: %w", err)
 	}
-	
+
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
-	
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("failed to send request: %w", err)
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
 		return "", fmt.Errorf("API error (status %d): %s", resp.StatusCode, string(body))
 	}
-	
+
 	var response struct {
 		Choices []struct {
 			Message struct {
@@ -191,15 +191,15 @@ func (c *Client) completeOpenAI(ctx context.Context, prompt string, config *Conf
 			} `json:"message"`
 		} `json:"choices"`
 	}
-	
+
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return "", fmt.Errorf("failed to decode response: %w", err)
 	}
-	
+
 	if len(response.Choices) == 0 {
 		return "", fmt.Errorf("no response from API")
 	}
-	
+
 	return response.Choices[0].Message.Content, nil
 }
 
@@ -208,57 +208,57 @@ func (c *Client) completeAnthropic(ctx context.Context, prompt string, config *C
 	messages := []map[string]string{
 		{"role": "user", "content": prompt},
 	}
-	
+
 	requestBody := map[string]interface{}{
 		"model":       config.Model,
 		"messages":    messages,
 		"temperature": config.Temperature,
 		"max_tokens":  config.MaxTokens,
 	}
-	
+
 	if config.SystemPrompt != "" {
 		requestBody["system"] = config.SystemPrompt
 	}
-	
+
 	body, err := json.Marshal(requestBody)
 	if err != nil {
 		return "", fmt.Errorf("failed to marshal request: %w", err)
 	}
-	
+
 	req, err := http.NewRequestWithContext(ctx, "POST", c.baseURL+"/messages", bytes.NewReader(body))
 	if err != nil {
 		return "", fmt.Errorf("failed to create request: %w", err)
 	}
-	
+
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("x-api-key", c.apiKey)
 	req.Header.Set("anthropic-version", "2023-06-01")
-	
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("failed to send request: %w", err)
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
 		return "", fmt.Errorf("API error (status %d): %s", resp.StatusCode, string(body))
 	}
-	
+
 	var response struct {
 		Content []struct {
 			Text string `json:"text"`
 		} `json:"content"`
 	}
-	
+
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return "", fmt.Errorf("failed to decode response: %w", err)
 	}
-	
+
 	if len(response.Content) == 0 {
 		return "", fmt.Errorf("no response from API")
 	}
-	
+
 	return response.Content[0].Text, nil
 }
 
@@ -280,17 +280,17 @@ func (c *Client) completeWithToolsOpenAI(ctx context.Context, prompt string, too
 			},
 		}
 	}
-	
+
 	messages := []map[string]string{
 		{"role": "user", "content": prompt},
 	}
-	
+
 	if config.SystemPrompt != "" {
 		messages = append([]map[string]string{
 			{"role": "system", "content": config.SystemPrompt},
 		}, messages...)
 	}
-	
+
 	requestBody := map[string]interface{}{
 		"model":       config.Model,
 		"messages":    messages,
@@ -298,31 +298,31 @@ func (c *Client) completeWithToolsOpenAI(ctx context.Context, prompt string, too
 		"temperature": config.Temperature,
 		"max_tokens":  config.MaxTokens,
 	}
-	
+
 	body, err := json.Marshal(requestBody)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal request: %w", err)
 	}
-	
+
 	req, err := http.NewRequestWithContext(ctx, "POST", c.baseURL+"/chat/completions", bytes.NewReader(body))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
-	
+
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
-	
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send request: %w", err)
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
 		return nil, fmt.Errorf("API error (status %d): %s", resp.StatusCode, string(body))
 	}
-	
+
 	var apiResponse struct {
 		Choices []struct {
 			Message struct {
@@ -343,15 +343,15 @@ func (c *Client) completeWithToolsOpenAI(ctx context.Context, prompt string, too
 			TotalTokens      int `json:"total_tokens"`
 		} `json:"usage"`
 	}
-	
+
 	if err := json.NewDecoder(resp.Body).Decode(&apiResponse); err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
-	
+
 	if len(apiResponse.Choices) == 0 {
 		return nil, fmt.Errorf("no response from API")
 	}
-	
+
 	choice := apiResponse.Choices[0]
 	response := &Response{
 		Content:      choice.Message.Content,
@@ -362,7 +362,7 @@ func (c *Client) completeWithToolsOpenAI(ctx context.Context, prompt string, too
 			TotalTokens:      apiResponse.Usage.TotalTokens,
 		},
 	}
-	
+
 	// Convert tool calls
 	for _, tc := range choice.Message.ToolCalls {
 		var args map[string]interface{}
@@ -375,7 +375,7 @@ func (c *Client) completeWithToolsOpenAI(ctx context.Context, prompt string, too
 			Arguments: args,
 		})
 	}
-	
+
 	return response, nil
 }
 
@@ -383,13 +383,13 @@ func (c *Client) completeWithToolsOpenAI(ctx context.Context, prompt string, too
 func (c *Client) completeWithToolsAnthropic(ctx context.Context, prompt string, tools []Tool, config *Config) (*Response, error) {
 	// For Anthropic, we'll simulate tool calling through prompting
 	// since Claude doesn't have native function calling like OpenAI
-	
+
 	toolDescriptions := []string{}
 	for _, tool := range tools {
-		toolDescriptions = append(toolDescriptions, 
+		toolDescriptions = append(toolDescriptions,
 			fmt.Sprintf("- %s: %s", tool.GetName(), tool.GetDescription()))
 	}
-	
+
 	enhancedPrompt := fmt.Sprintf(`%s
 
 Available tools:
@@ -400,12 +400,12 @@ Tool: [tool_name]
 Arguments: [JSON arguments]
 
 Otherwise, provide your response directly.`, prompt, strings.Join(toolDescriptions, "\n"))
-	
+
 	content, err := c.completeAnthropic(ctx, enhancedPrompt, config)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Parse for tool calls
 	response := &Response{
 		Content:      content,
@@ -415,13 +415,13 @@ Otherwise, provide your response directly.`, prompt, strings.Join(toolDescriptio
 			TotalTokens: len(content) / 4, // Rough estimate
 		},
 	}
-	
+
 	// Simple parsing for tool calls
 	if strings.Contains(content, "Tool:") && strings.Contains(content, "Arguments:") {
 		lines := strings.Split(content, "\n")
 		var toolName string
 		var arguments string
-		
+
 		for i, line := range lines {
 			if strings.HasPrefix(line, "Tool:") {
 				toolName = strings.TrimSpace(strings.TrimPrefix(line, "Tool:"))
@@ -438,7 +438,7 @@ Otherwise, provide your response directly.`, prompt, strings.Join(toolDescriptio
 				}
 			}
 		}
-		
+
 		if toolName != "" && arguments != "" {
 			var args map[string]interface{}
 			if err := json.Unmarshal([]byte(arguments), &args); err == nil {
@@ -450,25 +450,25 @@ Otherwise, provide your response directly.`, prompt, strings.Join(toolDescriptio
 			}
 		}
 	}
-	
+
 	return response, nil
 }
 
 // streamOpenAI handles OpenAI streaming
 func (c *Client) streamOpenAI(ctx context.Context, prompt string, config *Config) (<-chan string, error) {
 	ch := make(chan string)
-	
+
 	// For simplicity, using non-streaming API with channel
 	// In production, implement SSE streaming
 	go func() {
 		defer close(ch)
-		
+
 		content, err := c.completeOpenAI(ctx, prompt, config)
 		if err != nil {
 			ch <- fmt.Sprintf("Error: %v", err)
 			return
 		}
-		
+
 		// Simulate streaming by sending chunks
 		words := strings.Fields(content)
 		for i, word := range words {
@@ -483,24 +483,24 @@ func (c *Client) streamOpenAI(ctx context.Context, prompt string, config *Config
 			time.Sleep(50 * time.Millisecond) // Simulate streaming delay
 		}
 	}()
-	
+
 	return ch, nil
 }
 
 // streamAnthropic handles Anthropic streaming
 func (c *Client) streamAnthropic(ctx context.Context, prompt string, config *Config) (<-chan string, error) {
 	ch := make(chan string)
-	
+
 	// Similar to OpenAI, using non-streaming with simulated streaming
 	go func() {
 		defer close(ch)
-		
+
 		content, err := c.completeAnthropic(ctx, prompt, config)
 		if err != nil {
 			ch <- fmt.Sprintf("Error: %v", err)
 			return
 		}
-		
+
 		// Simulate streaming by sending chunks
 		words := strings.Fields(content)
 		for i, word := range words {
@@ -515,6 +515,6 @@ func (c *Client) streamAnthropic(ctx context.Context, prompt string, config *Con
 			time.Sleep(50 * time.Millisecond)
 		}
 	}()
-	
+
 	return ch, nil
 }

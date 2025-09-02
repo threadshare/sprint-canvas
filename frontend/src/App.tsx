@@ -5,12 +5,14 @@ import { FoundationStage } from '@/components/workflows/FoundationStage'
 import { DifferentiationStage } from '@/components/workflows/DifferentiationStage'
 import { ApproachStage } from '@/components/workflows/ApproachStage'
 import { ExportButton } from '@/components/export/ExportButton'
+import { AgentsPanel } from '@/components/AgentsPanel'
 import { Toaster } from '@/components/ui/toaster'
 import { apiClient } from '@/lib/api/client'
 import { webSocketService } from '@/lib/websocket'
 import type { Room } from '@/lib/api/types'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, Loader2 } from 'lucide-react'
+import { AlertCircle, Loader2, MessageCircle } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 // Convert backend data format to frontend format for compatibility
 const convertToFrontendFoundationData = (foundation: any) => {
@@ -102,6 +104,9 @@ function App() {
   // Loading and error state
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
+  // AI Panel state
+  const [showAIPanel, setShowAIPanel] = useState(false)
 
   // Check URL parameters on load
   useEffect(() => {
@@ -350,6 +355,18 @@ function App() {
           onLeaveRoom={handleLeaveRoom}
         />
 
+        {/* AI Assistant Button - Fixed Position */}
+        <div className="fixed bottom-8 right-8 z-40">
+          <Button
+            onClick={() => setShowAIPanel(!showAIPanel)}
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg"
+            size="lg"
+          >
+            <MessageCircle className="h-5 w-5 mr-2" />
+            AI 助手
+          </Button>
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {error && (
             <Alert className="mb-6 border-red-200 bg-red-50">
@@ -514,6 +531,14 @@ function App() {
           </div>
         </div>
       </div>
+      
+      {/* AI Agents Panel */}
+      <AgentsPanel
+        isOpen={showAIPanel}
+        onClose={() => setShowAIPanel(false)}
+        roomContext={currentRoom ? `房间: ${currentRoom.name}, 当前阶段: ${currentRoom.status}, 用户: ${currentUserName}` : ''}
+      />
+      
       <Toaster />
     </>
   )

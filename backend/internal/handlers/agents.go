@@ -106,7 +106,7 @@ func ThinkAgent(c *gin.Context) {
 	}
 
 	// Create context with timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)  // Increased for API calls
 	defer cancel()
 
 	// Process with ThinkAgent
@@ -161,7 +161,7 @@ func CritiqueAgent(c *gin.Context) {
 	}
 
 	// Create context with timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)  // Increased for API calls
 	defer cancel()
 
 	// Process with CritiqueAgent
@@ -216,7 +216,7 @@ func ResearchAgent(c *gin.Context) {
 	}
 
 	// Create context with timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)  // Increased for API calls
 	defer cancel()
 
 	// Process with ResearchAgent

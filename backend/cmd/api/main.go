@@ -7,13 +7,27 @@ import (
 	"foundation-sprint/internal/middleware"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system environment variables")
+	} else {
+		log.Println("Loaded .env file")
+	}
+	
+	// Log OpenAI configuration for debugging
+	log.Printf("OpenAI API Key: %s...", os.Getenv("OPENAI_API_KEY")[:10])
+	log.Printf("OpenAI Base URL: %s", os.Getenv("OPENAI_BASE_URL"))
+	log.Printf("OpenAI Model: %s", os.Getenv("OPENAI_MODEL"))
+	
 	// Initialize database
 	log.Println("Initializing database...")
 	db, err := database.GetDatabase()

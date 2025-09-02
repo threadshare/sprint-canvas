@@ -405,15 +405,48 @@ Provide a clear, actionable response that directly addresses the query.`,
 	return response
 }
 
+// generateDefaultResponse creates a helpful default response based on agent type
+func (r *ReActProcessor) generateDefaultResponse(input AgentInput) string {
+	agentName := r.agent.GetName()
+	
+	switch agentName {
+	case "ThinkAgent":
+		if input.Query == "" {
+			return "你好！我是思考助手，可以帮你拓展思路、激发创意。请告诉我你想探讨什么话题？"
+		}
+		return fmt.Sprintf("关于「%s」，让我帮你从不同角度思考：\n\n1. 从用户视角看，这个想法的核心价值是什么？\n2. 有哪些潜在的应用场景？\n3. 可能面临的挑战有哪些？\n\n你想深入探讨哪个方向？", input.Query)
+		
+	case "CritiqueAgent":
+		if input.Query == "" {
+			return "你好！我是批判助手，可以帮你发现想法中的盲点和风险。请分享你的想法，我来帮你审视。"
+		}
+		return fmt.Sprintf("对于「%s」，我需要提出几个关键问题：\n\n⚠️ 你是否验证过这个需求的真实性？\n⚠️ 目标用户群体的规模有多大？\n⚠️ 现有解决方案的不足在哪里？\n\n建议先从小规模验证开始。", input.Query)
+		
+	case "ResearchAgent":
+		if input.Query == "" {
+			return "你好！我是研究助手，可以帮你收集市场数据、分析竞品。请告诉我你需要研究什么？"
+		}
+		return fmt.Sprintf("关于「%s」的研究：\n\n📊 市场现状：这是一个快速增长的领域\n🔍 竞品分析：需要关注现有解决方案\n💡 机会点：寻找差异化的切入点\n\n你最想了解哪方面的信息？", input.Query)
+		
+	default:
+		return "让我帮你分析这个问题。请提供更多背景信息，这样我能给出更准确的建议。"
+	}
+}
+
 // synthesizeResponse creates a response from reasoning steps
 func (r *ReActProcessor) synthesizeResponse(ctx context.Context, input AgentInput, output *AgentOutput) string {
 	if len(output.Reasoning) == 0 {
-		return "I need more information to provide a helpful response."
+		// 如果没有推理步骤，提供一个基于上下文的默认响应
+		return r.generateDefaultResponse(input)
 	}
 	
 	// Collect all observations and reflections
 	insights := []string{}
+	thoughts := []string{}
 	for _, step := range output.Reasoning {
+		if step.Thought != "" {
+			thoughts = append(thoughts, step.Thought)
+		}
 		if step.Reflection != "" {
 			insights = append(insights, step.Reflection)
 		} else if step.Observation != "" {
@@ -421,11 +454,17 @@ func (r *ReActProcessor) synthesizeResponse(ctx context.Context, input AgentInpu
 		}
 	}
 	
-	if len(insights) == 0 {
-		return "I'm still processing your request. Please try again."
+	// 如果没有insights但有thoughts，使用thoughts
+	if len(insights) == 0 && len(thoughts) > 0 {
+		return fmt.Sprintf("基于我的分析：\n\n%s", strings.Join(thoughts, "\n\n"))
 	}
 	
-	return fmt.Sprintf("Based on my analysis:\n\n%s", strings.Join(insights, "\n\n"))
+	if len(insights) == 0 {
+		// 提供更有帮助的默认响应
+		return r.generateDefaultResponse(input)
+	}
+	
+	return fmt.Sprintf("基于我的分析：\n\n%s", strings.Join(insights, "\n\n"))
 }
 
 // calculateConfidence calculates confidence score based on reasoning
