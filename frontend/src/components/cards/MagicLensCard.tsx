@@ -79,7 +79,7 @@ export const MagicLensCard: React.FC<MagicLensProps> = ({
 
   const getAverageScore = () => {
     if (evaluations.length === 0) return 0;
-    const total = evaluations.reduce((sum, eval) => sum + eval.score, 0);
+    const total = evaluations.reduce((sum, evaluation) => sum + evaluation.score, 0);
     return total / evaluations.length;
   };
 

@@ -1,23 +1,71 @@
 package handlers
 
 import (
+	"context"
+	"foundation-sprint/internal/agents"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
+// AgentService is the global agent service instance
+var AgentService *agents.Service
+
+// InitAgentService initializes the agent service
+func InitAgentService() error {
+	service, err := agents.NewService()
+	if err != nil {
+		return err
+	}
+	AgentService = service
+	return nil
+}
+
 // AgentRequest AI Agent 请求结构
 type AgentRequest struct {
-	Context string `json:"context" binding:"required"`
-	Query   string `json:"query" binding:"required"`
-	RoomID  string `json:"room_id"`
+	Context string                 `json:"context" binding:"required"`
+	Query   string                 `json:"query" binding:"required"`
+	RoomID  string                 `json:"room_id"`
+	Phase   string                 `json:"phase"`
+	History []HistoryItem          `json:"history"`
+	Data    map[string]interface{} `json:"data"`
+}
+
+// HistoryItem represents a conversation history item
+type HistoryItem struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
 }
 
 // AgentResponse AI Agent 响应结构
 type AgentResponse struct {
-	Agent    string `json:"agent"`
-	Response string `json:"response"`
-	Context  string `json:"context"`
+	Agent       string                 `json:"agent"`
+	Response    string                 `json:"response"`
+	Context     string                 `json:"context"`
+	Reasoning   []ReasoningStep        `json:"reasoning,omitempty"`
+	Tools       []ToolExecution        `json:"tools,omitempty"`
+	Suggestions []string               `json:"suggestions,omitempty"`
+	NextActions []string               `json:"next_actions,omitempty"`
+	Confidence  float64                `json:"confidence"`
+	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+}
+
+// ReasoningStep represents a step in the reasoning process
+type ReasoningStep struct {
+	StepNumber  int    `json:"step_number"`
+	Thought     string `json:"thought"`
+	Action      string `json:"action"`
+	Observation string `json:"observation,omitempty"`
+	Reflection  string `json:"reflection,omitempty"`
+}
+
+// ToolExecution represents a tool execution
+type ToolExecution struct {
+	ToolName string      `json:"tool_name"`
+	Duration int64       `json:"duration_ms"`
+	Success  bool        `json:"success"`
+	Error    string      `json:"error,omitempty"`
 }
 
 // ThinkAgent "帮我想" Agent - 补充思考角度
@@ -28,14 +76,51 @@ func ThinkAgent(c *gin.Context) {
 		return
 	}
 
-	// TODO: 这里应该调用实际的 AI 服务 (OpenAI, Claude 等)
-	// 现在返回模拟响应
-	response := AgentResponse{
-		Agent:    "think",
-		Response: generateThinkResponse(req.Context, req.Query),
-		Context:  req.Context,
+	// Check if service is initialized
+	if AgentService == nil {
+		// Try to initialize if not already done
+		if err := InitAgentService(); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Agent service not initialized",
+				"details": err.Error(),
+			})
+			return
+		}
 	}
 
+	// Convert request to agent input
+	input := agents.AgentInput{
+		Query:   req.Query,
+		Context: req.Context,
+		RoomID:  req.RoomID,
+		Phase:   req.Phase,
+		Data:    req.Data,
+	}
+
+	// Convert history
+	for _, h := range req.History {
+		input.History = append(input.History, agents.ConversationHistory{
+			Role:    h.Role,
+			Content: h.Content,
+		})
+	}
+
+	// Create context with timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Process with ThinkAgent
+	output, err := AgentService.ProcessThink(ctx, input)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to process request",
+			"details": err.Error(),
+		})
+		return
+	}
+
+	// Convert output to response
+	response := convertAgentOutput("think", req.Context, output)
 	c.JSON(http.StatusOK, response)
 }
 
@@ -47,12 +132,50 @@ func CritiqueAgent(c *gin.Context) {
 		return
 	}
 
-	response := AgentResponse{
-		Agent:    "critique",
-		Response: generateCritiqueResponse(req.Context, req.Query),
-		Context:  req.Context,
+	// Check if service is initialized
+	if AgentService == nil {
+		if err := InitAgentService(); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Agent service not initialized",
+				"details": err.Error(),
+			})
+			return
+		}
 	}
 
+	// Convert request to agent input
+	input := agents.AgentInput{
+		Query:   req.Query,
+		Context: req.Context,
+		RoomID:  req.RoomID,
+		Phase:   req.Phase,
+		Data:    req.Data,
+	}
+
+	// Convert history
+	for _, h := range req.History {
+		input.History = append(input.History, agents.ConversationHistory{
+			Role:    h.Role,
+			Content: h.Content,
+		})
+	}
+
+	// Create context with timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Process with CritiqueAgent
+	output, err := AgentService.ProcessCritique(ctx, input)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to process request",
+			"details": err.Error(),
+		})
+		return
+	}
+
+	// Convert output to response
+	response := convertAgentOutput("critique", req.Context, output)
 	c.JSON(http.StatusOK, response)
 }
 
@@ -64,27 +187,85 @@ func ResearchAgent(c *gin.Context) {
 		return
 	}
 
-	response := AgentResponse{
-		Agent:    "research",
-		Response: generateResearchResponse(req.Context, req.Query),
-		Context:  req.Context,
+	// Check if service is initialized
+	if AgentService == nil {
+		if err := InitAgentService(); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Agent service not initialized",
+				"details": err.Error(),
+			})
+			return
+		}
 	}
 
+	// Convert request to agent input
+	input := agents.AgentInput{
+		Query:   req.Query,
+		Context: req.Context,
+		RoomID:  req.RoomID,
+		Phase:   req.Phase,
+		Data:    req.Data,
+	}
+
+	// Convert history
+	for _, h := range req.History {
+		input.History = append(input.History, agents.ConversationHistory{
+			Role:    h.Role,
+			Content: h.Content,
+		})
+	}
+
+	// Create context with timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Process with ResearchAgent
+	output, err := AgentService.ProcessResearch(ctx, input)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to process request",
+			"details": err.Error(),
+		})
+		return
+	}
+
+	// Convert output to response
+	response := convertAgentOutput("research", req.Context, output)
 	c.JSON(http.StatusOK, response)
 }
 
-// 生成"帮我想"响应（模拟）
-func generateThinkResponse(context, query string) string {
-	// TODO: 实际实现中应该调用 AI API
-	return "基于您的描述，我建议从以下几个角度思考：\n1. 从用户体验的角度考虑\n2. 考虑技术实现的可行性\n3. 分析市场时机是否合适\n4. 评估团队能力是否匹配"
-}
+// convertAgentOutput converts agent output to HTTP response
+func convertAgentOutput(agentName, context string, output *agents.AgentOutput) AgentResponse {
+	response := AgentResponse{
+		Agent:       agentName,
+		Response:    output.Response,
+		Context:     context,
+		Suggestions: output.Suggestions,
+		NextActions: output.NextActions,
+		Confidence:  output.Confidence,
+		Metadata:    output.Metadata,
+	}
 
-// 生成"批判我"响应（模拟）
-func generateCritiqueResponse(context, query string) string {
-	return "让我从批判的角度分析一下：\n1. 这个想法是否过于理想化？\n2. 市场上真的存在这个需求吗？\n3. 您的假设是否经过验证？\n4. 竞争对手为什么没有做这个？可能有什么原因？"
-}
+	// Convert reasoning steps
+	for _, step := range output.Reasoning {
+		response.Reasoning = append(response.Reasoning, ReasoningStep{
+			StepNumber:  step.StepNumber,
+			Thought:     step.Thought,
+			Action:      step.Action,
+			Observation: step.Observation,
+			Reflection:  step.Reflection,
+		})
+	}
 
-// 生成"查一查"响应（模拟）
-func generateResearchResponse(context, query string) string {
-	return "基于研究，我找到了以下信息：\n1. 相关市场规模和趋势分析\n2. 主要竞争对手的产品特点\n3. 用户行为和需求的相关研究\n4. 技术发展趋势和最佳实践"
+	// Convert tool executions
+	for _, tool := range output.Tools {
+		response.Tools = append(response.Tools, ToolExecution{
+			ToolName: tool.ToolName,
+			Duration: tool.Duration,
+			Success:  tool.Success,
+			Error:    tool.Error,
+		})
+	}
+
+	return response
 }

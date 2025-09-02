@@ -2,15 +2,38 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { EditableCard } from '@/components/cards/EditableCard';
+import { ProblemCard } from '@/components/cards/ProblemCard';
+import { CompetitionCard } from '@/components/cards/CompetitionCard';
+import { AdvantageCard } from '@/components/cards/AdvantageCard';
 import { VoteCard } from '@/components/cards/VoteCard';
 import { Plus, Users, AlertCircle, Target, TrendingUp, Vote } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+interface ProblemItem {
+  id: string;
+  description: string;
+  severity: number;
+  impact: 'few' | 'some' | 'many' | 'most';
+}
+
+interface CompetitionItem {
+  id: string;
+  name: string;
+  type: 'direct' | 'alternative' | 'workaround';
+  description: string;
+}
+
+interface AdvantageItem {
+  id: string;
+  description: string;
+  category: 'technical' | 'insight' | 'resource' | 'motivation';
+}
+
 interface FoundationData {
   customers: string[];
-  problems: string[];
-  competition: string[];
-  advantages: string[];
+  problems: ProblemItem[];
+  competition: CompetitionItem[];
+  advantages: AdvantageItem[];
 }
 
 interface FoundationStageProps {
@@ -24,49 +47,6 @@ interface FoundationStageProps {
   className?: string;
 }
 
-interface FoundationSection {
-  key: keyof FoundationData;
-  title: string;
-  icon: React.ComponentType<{ className?: string }>;
-  description: string;
-  variant: 'customer' | 'problem' | 'competition' | 'advantage';
-  placeholder: string;
-}
-
-const sections: FoundationSection[] = [
-  {
-    key: 'customers',
-    title: '客户是谁？',
-    icon: Users,
-    description: '定义您的目标客户群体',
-    variant: 'customer',
-    placeholder: '描述一个客户类型...',
-  },
-  {
-    key: 'problems',
-    title: '解决什么问题？',
-    icon: AlertCircle,
-    description: '明确要解决的核心问题',
-    variant: 'problem',
-    placeholder: '描述一个具体问题...',
-  },
-  {
-    key: 'competition',
-    title: '竞争格局如何？',
-    icon: Target,
-    description: '分析直接竞争对手、替代品和土办法',
-    variant: 'competition',
-    placeholder: '描述一个竞争对手或替代方案...',
-  },
-  {
-    key: 'advantages',
-    title: '我们的优势？',
-    icon: TrendingUp,
-    description: '团队的独特能力、洞察或动机',
-    variant: 'advantage',
-    placeholder: '描述一个独特优势...',
-  },
-];
 
 export const FoundationStage: React.FC<FoundationStageProps> = ({
   data,
@@ -81,28 +61,99 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
   const [activeVote, setActiveVote] = useState<keyof FoundationData | null>(null);
   const [votes, setVotes] = useState<Record<string, any>>({});
 
-  const addItem = (section: keyof FoundationData, text: string) => {
+  const addCustomer = (text: string) => {
     if (!text.trim()) return;
-    
     const newData = {
       ...data,
-      [section]: [...data[section], text.trim()],
+      customers: [...data.customers, text.trim()],
     };
     onDataChange?.(newData);
   };
 
-  const updateItem = (section: keyof FoundationData, index: number, text: string) => {
+  const updateCustomer = (index: number, text: string) => {
     const newData = {
       ...data,
-      [section]: data[section].map((item, i) => i === index ? text : item),
+      customers: data.customers.map((item, i) => i === index ? text : item),
     };
     onDataChange?.(newData);
   };
 
-  const deleteItem = (section: keyof FoundationData, index: number) => {
+  const deleteCustomer = (index: number) => {
     const newData = {
       ...data,
-      [section]: data[section].filter((_, i) => i !== index),
+      customers: data.customers.filter((_, i) => i !== index),
+    };
+    onDataChange?.(newData);
+  };
+
+  const addProblem = (problem: ProblemItem) => {
+    const newData = {
+      ...data,
+      problems: [...data.problems, problem],
+    };
+    onDataChange?.(newData);
+  };
+
+  const updateProblem = (index: number, problem: ProblemItem) => {
+    const newData = {
+      ...data,
+      problems: data.problems.map((item, i) => i === index ? problem : item),
+    };
+    onDataChange?.(newData);
+  };
+
+  const deleteProblem = (index: number) => {
+    const newData = {
+      ...data,
+      problems: data.problems.filter((_, i) => i !== index),
+    };
+    onDataChange?.(newData);
+  };
+
+  const addCompetition = (competition: CompetitionItem) => {
+    const newData = {
+      ...data,
+      competition: [...data.competition, competition],
+    };
+    onDataChange?.(newData);
+  };
+
+  const updateCompetition = (index: number, competition: CompetitionItem) => {
+    const newData = {
+      ...data,
+      competition: data.competition.map((item, i) => i === index ? competition : item),
+    };
+    onDataChange?.(newData);
+  };
+
+  const deleteCompetition = (index: number) => {
+    const newData = {
+      ...data,
+      competition: data.competition.filter((_, i) => i !== index),
+    };
+    onDataChange?.(newData);
+  };
+
+  const addAdvantage = (advantage: AdvantageItem) => {
+    const newData = {
+      ...data,
+      advantages: [...data.advantages, advantage],
+    };
+    onDataChange?.(newData);
+  };
+
+  const updateAdvantage = (index: number, advantage: AdvantageItem) => {
+    const newData = {
+      ...data,
+      advantages: data.advantages.map((item, i) => i === index ? advantage : item),
+    };
+    onDataChange?.(newData);
+  };
+
+  const deleteAdvantage = (index: number) => {
+    const newData = {
+      ...data,
+      advantages: data.advantages.filter((_, i) => i !== index),
     };
     onDataChange?.(newData);
   };
@@ -137,98 +188,201 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
         </CardContent>
       </Card>
 
-      {/* Foundation 四个部分 */}
-      {sections.map((section) => {
-        const IconComponent = section.icon;
-        const items = data[section.key];
-        const isVoting = activeVote === section.key;
-
-        return (
-          <div key={section.key} className="space-y-4">
-            <Card className="border-gray-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <IconComponent className="h-6 w-6" />
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold">{section.title}</h3>
-                    <p className="text-sm text-gray-600 font-normal mt-1">
-                      {section.description}
-                    </p>
-                  </div>
-                  {!readOnly && items.length > 0 && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => startVoting(section.key)}
-                      disabled={isVoting}
-                    >
-                      <Vote className="h-4 w-4 mr-1" />
-                      {isVoting ? '投票中...' : '开始投票'}
-                    </Button>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              
-              <CardContent>
-                {isVoting ? (
-                  <VoteCard
-                    id={`foundation-vote-${section.key}`}
-                    title={`${section.title} - 团队投票`}
-                    description="请为最重要的选项投票"
-                    options={items.map((item, index) => ({
-                      id: `${section.key}-${index}`,
-                      text: item,
-                      description: '',
-                      votes: [],
-                    }))}
-                    currentUserId={currentUserId}
-                    currentUserName={currentUserName}
-                    onVote={handleVote}
-                    showResults={true}
+      {/* 客户是谁 */}
+      <div className="space-y-4">
+        <Card className="border-gray-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <Users className="h-6 w-6" />
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold">客户是谁？</h3>
+                <p className="text-sm text-gray-600 font-normal mt-1">
+                  定义您的目标客户群体
+                </p>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {data.customers.map((customer, index) => (
+                  <EditableCard
+                    key={index}
+                    id={`customer-${index}`}
+                    initialText={customer}
+                    placeholder="描述一个客户类型..."
+                    variant="customer"
+                    readOnly={readOnly}
+                    onSave={(text) => updateCustomer(index, text)}
+                    onDelete={() => deleteCustomer(index)}
                   />
-                ) : (
-                  <div className="space-y-4">
-                    {/* 已有条目 */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {items.map((item, index) => (
-                        <EditableCard
-                          key={index}
-                          id={`${section.key}-${index}`}
-                          initialText={item}
-                          placeholder={section.placeholder}
-                          variant={section.variant}
-                          readOnly={readOnly}
-                          onSave={(text) => updateItem(section.key, index, text)}
-                          onDelete={() => deleteItem(section.key, index)}
-                        />
-                      ))}
-                      
-                      {/* 添加新条目 */}
-                      {!readOnly && (
-                        <EditableCard
-                          key="new"
-                          placeholder={section.placeholder}
-                          variant={section.variant}
-                          onSave={(text) => addItem(section.key, text)}
-                        />
-                      )}
-                    </div>
-
-                    {items.length === 0 && (
-                      <div className="text-center py-8 text-gray-500">
-                        <IconComponent className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                        <p className="text-sm">
-                          {!readOnly ? `点击上方卡片添加${section.title.replace('？', '')}` : '暂无数据'}
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                ))}
+                
+                {!readOnly && (
+                  <EditableCard
+                    key="new"
+                    placeholder="描述一个客户类型..."
+                    variant="customer"
+                    onSave={(text) => addCustomer(text)}
+                  />
                 )}
-              </CardContent>
-            </Card>
-          </div>
-        );
-      })}
+              </div>
+
+              {data.customers.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  <Users className="h-12 w-12 mx-auto mb-4 opacity-30" />
+                  <p className="text-sm">点击上方卡片添加客户类型</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* 解决什么问题 */}
+      <div className="space-y-4">
+        <Card className="border-gray-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <AlertCircle className="h-6 w-6" />
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold">解决什么问题？</h3>
+                <p className="text-sm text-gray-600 font-normal mt-1">
+                  明确要解决的核心问题，包括痛点强度和影响范围
+                </p>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {data.problems.map((problem, index) => (
+                  <ProblemCard
+                    key={problem.id}
+                    problem={problem}
+                    readOnly={readOnly}
+                    onSave={(updatedProblem) => updateProblem(index, updatedProblem)}
+                    onDelete={() => deleteProblem(index)}
+                  />
+                ))}
+                
+                {!readOnly && (
+                  <ProblemCard
+                    key="new"
+                    placeholder="描述一个具体问题..."
+                    onSave={(problem) => addProblem(problem)}
+                  />
+                )}
+              </div>
+
+              {data.problems.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  <AlertCircle className="h-12 w-12 mx-auto mb-4 opacity-30" />
+                  <p className="text-sm">点击上方卡片添加要解决的问题</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* 竞争格局如何 */}
+      <div className="space-y-4">
+        <Card className="border-gray-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <Target className="h-6 w-6" />
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold">竞争格局如何？</h3>
+                <p className="text-sm text-gray-600 font-normal mt-1">
+                  分析直接竞争对手、替代品和土办法
+                </p>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {data.competition.map((competition, index) => (
+                  <CompetitionCard
+                    key={competition.id}
+                    competition={competition}
+                    readOnly={readOnly}
+                    onSave={(updatedCompetition) => updateCompetition(index, updatedCompetition)}
+                    onDelete={() => deleteCompetition(index)}
+                  />
+                ))}
+                
+                {!readOnly && (
+                  <CompetitionCard
+                    key="new"
+                    placeholder="描述一个竞争对手或替代方案..."
+                    onSave={(competition) => addCompetition(competition)}
+                  />
+                )}
+              </div>
+
+              {data.competition.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  <Target className="h-12 w-12 mx-auto mb-4 opacity-30" />
+                  <p className="text-sm">点击上方卡片添加竞争分析</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* 我们的优势 */}
+      <div className="space-y-4">
+        <Card className="border-gray-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <TrendingUp className="h-6 w-6" />
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold">我们的优势？</h3>
+                <p className="text-sm text-gray-600 font-normal mt-1">
+                  团队的独特能力、洞察、资源或动机
+                </p>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {data.advantages.map((advantage, index) => (
+                  <AdvantageCard
+                    key={advantage.id}
+                    advantage={advantage}
+                    readOnly={readOnly}
+                    onSave={(updatedAdvantage) => updateAdvantage(index, updatedAdvantage)}
+                    onDelete={() => deleteAdvantage(index)}
+                  />
+                ))}
+                
+                {!readOnly && (
+                  <AdvantageCard
+                    key="new"
+                    placeholder="描述一个独特优势..."
+                    onSave={(advantage) => addAdvantage(advantage)}
+                  />
+                )}
+              </div>
+
+              {data.advantages.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-30" />
+                  <p className="text-sm">点击上方卡片添加团队优势</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* 进度和下一步 */}
       <Card className="border-green-200 bg-green-50">

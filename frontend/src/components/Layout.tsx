@@ -54,20 +54,23 @@ export const Layout: React.FC<LayoutProps> = ({
 }) => {
   const [isAgentsPanelOpen, setIsAgentsPanelOpen] = useState(false);
   return (
-    <div className={cn('min-h-screen bg-gray-50', className)}>
+    <div className={cn('min-h-screen gradient-foundation', className)}>
       {/* 顶部导航 */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="paper-card border-b-0 rounded-none shadow-paper bg-white/80 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Lightbulb className="h-6 w-6 text-blue-600" />
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
+                  <Lightbulb className="h-7 w-7 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-lg font-semibold text-gray-900">
+                <h1 className="text-xl font-bold text-foundation bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   {roomName}
                 </h1>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-foundation/70 font-medium">
                   Foundation Sprint 协作工具
                 </p>
               </div>

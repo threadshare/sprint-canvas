@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,20 +10,20 @@
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
+  --primary: 222.2 47.4% 11.2%;
   --primary-foreground: 210 40% 98%;
   --secondary: 210 40% 96%;
-  --secondary-foreground: 222.2 84% 4.9%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
   --muted: 210 40% 96%;
   --muted-foreground: 215.4 16.3% 46.9%;
   --accent: 210 40% 96%;
-  --accent-foreground: 222.2 84% 4.9%;
+  --accent-foreground: 222.2 47.4% 11.2%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
-  --radius: 0.5rem;
+  --ring: 215 20.2% 65.1%;
+  --radius: 0.625rem;
 }
 
 .dark {
@@ -41,10 +42,10 @@
   --accent: 217.2 32.6% 17.5%;
   --accent-foreground: 210 40% 98%;
   --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive-foreground: 0 85.7% 97.3%;
   --border: 217.2 32.6% 17.5%;
   --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9;
+  --ring: 212.7 26.8% 83.9%;
 }
 
 * {
@@ -55,4 +56,196 @@ body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Foundation Sprint Custom Theme */
+:root {
+  /* Foundation Sprint 专属色彩系统 */
+  --foundation-warm: oklch(0.97 0.01 45);
+  --foundation-paper: oklch(0.99 0.002 45);
+  --foundation-ink: oklch(0.25 0.015 240);
+  --foundation-accent-blue: oklch(0.65 0.15 240);
+  --foundation-accent-amber: oklch(0.85 0.12 75);
+  --foundation-accent-emerald: oklch(0.7 0.13 145);
+  --foundation-accent-rose: oklch(0.72 0.15 15);
+  --foundation-accent-purple: oklch(0.68 0.14 285);
+  
+  /* 纸质卡片阴影系统 */
+  --paper-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 3px -1px rgb(0 0 0 / 0.1);
+  --paper-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --paper-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --paper-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  
+  /* 纸质质感纹理 */
+  --paper-texture: radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 0);
+}
+
+.dark {
+  --foundation-warm: oklch(0.15 0.01 45);
+  --foundation-paper: oklch(0.18 0.002 45);
+  --foundation-ink: oklch(0.9 0.01 45);
+  --foundation-accent-blue: oklch(0.7 0.15 240);
+  --foundation-accent-amber: oklch(0.8 0.12 75);
+  --foundation-accent-emerald: oklch(0.75 0.13 145);
+  --foundation-accent-rose: oklch(0.77 0.15 15);
+  --foundation-accent-purple: oklch(0.73 0.14 285);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    background: linear-gradient(135deg, var(--foundation-warm) 0%, var(--foundation-paper) 100%);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  /* 纸质卡片基础样式 */
+  .paper-card {
+    @apply relative bg-white rounded-xl border border-gray-100;
+    background: linear-gradient(135deg, 
+      var(--foundation-paper) 0%, 
+      oklch(0.985 0.005 45) 100%);
+    background-image: var(--paper-texture);
+    background-size: 20px 20px;
+    box-shadow: var(--paper-shadow);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .paper-card:hover {
+    box-shadow: var(--paper-shadow-lg);
+    transform: translateY(-2px);
+  }
+  
+  /* Foundation Sprint 主题色卡片 */
+  .card-customer {
+    @apply paper-card;
+    background: linear-gradient(135deg, 
+      var(--foundation-accent-blue) 0%, 
+      oklch(0.95 0.05 240) 100%);
+    border-color: var(--foundation-accent-blue);
+  }
+  
+  .card-problem {
+    @apply paper-card;
+    background: linear-gradient(135deg, 
+      var(--foundation-accent-amber) 0%, 
+      oklch(0.95 0.05 75) 100%);
+    border-color: var(--foundation-accent-amber);
+  }
+  
+  .card-competition {
+    @apply paper-card;
+    background: linear-gradient(135deg, 
+      var(--foundation-accent-rose) 0%, 
+      oklch(0.95 0.05 15) 100%);
+    border-color: var(--foundation-accent-rose);
+  }
+  
+  .card-advantage {
+    @apply paper-card;
+    background: linear-gradient(135deg, 
+      var(--foundation-accent-emerald) 0%, 
+      oklch(0.95 0.05 145) 100%);
+    border-color: var(--foundation-accent-emerald);
+  }
+  
+  /* 精美的按钮样式 */
+  .btn-foundation {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium;
+    @apply transition-all duration-200 ease-in-out;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+    background: linear-gradient(135deg, var(--foundation-accent-blue) 0%, oklch(0.6 0.18 250) 100%);
+    color: white;
+    box-shadow: 0 2px 4px -1px rgb(59 130 246 / 0.3);
+  }
+  
+  .btn-foundation:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px -2px rgb(59 130 246 / 0.4);
+  }
+  
+  /* 美化的输入框 */
+  .input-foundation {
+    @apply paper-card px-3 py-2 text-sm;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  
+  .input-foundation:focus {
+    border-color: var(--foundation-accent-blue);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+  }
+}
+
+@layer utilities {
+  .text-foundation {
+    color: var(--foundation-ink);
+  }
+  
+  .bg-foundation {
+    background: var(--foundation-warm);
+  }
+  
+  .gradient-foundation {
+    background: linear-gradient(135deg, var(--foundation-warm) 0%, var(--foundation-paper) 100%);
+  }
+  
+  /* 高级阴影工具类 */
+  .shadow-paper {
+    box-shadow: var(--paper-shadow);
+  }
+  
+  .shadow-paper-lg {
+    box-shadow: var(--paper-shadow-lg);
+  }
+  
+  .shadow-paper-xl {
+    box-shadow: var(--paper-shadow-xl);
+  }
 }

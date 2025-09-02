@@ -4,11 +4,31 @@ import { FoundationStage } from '@/components/workflows/FoundationStage'
 import { DifferentiationStage } from '@/components/workflows/DifferentiationStage'
 import { ApproachStage } from '@/components/workflows/ApproachStage'
 
+interface ProblemItem {
+  id: string;
+  description: string;
+  severity: number; // 1-10分痛点强度评分
+  impact: 'few' | 'some' | 'many' | 'most'; // 影响范围
+}
+
+interface CompetitionItem {
+  id: string;
+  name: string;
+  type: 'direct' | 'alternative' | 'workaround'; // 直接竞争者/替代方案/土办法
+  description: string;
+}
+
+interface AdvantageItem {
+  id: string;
+  description: string;
+  category: 'technical' | 'insight' | 'resource' | 'motivation'; // 技术能力/行业洞察/资源优势/团队动机
+}
+
 interface FoundationData {
   customers: string[];
-  problems: string[];
-  competition: string[];
-  advantages: string[];
+  problems: ProblemItem[];
+  competition: CompetitionItem[];
+  advantages: AdvantageItem[];
 }
 
 interface DifferentiationFactor {

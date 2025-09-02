@@ -128,7 +128,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
       // 清理相关评估
       magicLenses: data.magicLenses.map(lens => ({
         ...lens,
-        evaluations: lens.evaluations.filter(eval => eval.pathId !== pathId),
+        evaluations: lens.evaluations.filter(evaluation => evaluation.pathId !== pathId),
       })),
     };
     onDataChange?.(newData);
@@ -161,8 +161,8 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
             // 更新现有评估
             return {
               ...lens,
-              evaluations: lens.evaluations.map((eval, index) => 
-                index === existingIndex ? newEvaluation : eval
+              evaluations: lens.evaluations.map((evaluation, index) => 
+                index === existingIndex ? newEvaluation : evaluation
               ),
             };
           } else {

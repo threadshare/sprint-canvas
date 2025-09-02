@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
 import { Trash2, Edit3, Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -16,19 +17,19 @@ interface EditableCardProps {
 }
 
 const variantStyles = {
-  default: 'border-gray-200 bg-white hover:shadow-lg',
-  customer: 'border-blue-200 bg-blue-50 hover:shadow-lg hover:shadow-blue-100',
-  problem: 'border-red-200 bg-red-50 hover:shadow-lg hover:shadow-red-100',
-  competition: 'border-yellow-200 bg-yellow-50 hover:shadow-lg hover:shadow-yellow-100',
-  advantage: 'border-green-200 bg-green-50 hover:shadow-lg hover:shadow-green-100',
+  default: 'paper-card',
+  customer: 'card-customer',
+  problem: 'card-problem',
+  competition: 'card-competition',
+  advantage: 'card-advantage',
 };
 
 const variantTextColors = {
-  default: 'text-gray-800',
-  customer: 'text-blue-800',
-  problem: 'text-red-800',
-  competition: 'text-yellow-800',
-  advantage: 'text-green-800',
+  default: 'text-foundation',
+  customer: 'text-blue-900',
+  problem: 'text-amber-900',
+  competition: 'text-rose-900',
+  advantage: 'text-emerald-900',
 };
 
 export const EditableCard: React.FC<EditableCardProps> = ({
@@ -82,14 +83,21 @@ export const EditableCard: React.FC<EditableCardProps> = ({
   };
 
   return (
-    <Card
-      className={cn(
-        'relative group cursor-pointer transition-all duration-200 transform hover:-translate-y-1',
-        variantStyles[variant],
-        'shadow-paper hover:shadow-paper-lg',
-        className
-      )}
-      onClick={!isEditing ? handleEdit : undefined}
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Card
+        className={cn(
+          'relative group cursor-pointer',
+          variantStyles[variant],
+          className
+        )}
+        onClick={!isEditing ? handleEdit : undefined}
     >
       <CardContent className="p-4 min-h-[120px] flex flex-col">
         {isEditing ? (
@@ -170,5 +178,6 @@ export const EditableCard: React.FC<EditableCardProps> = ({
         )}
       </CardContent>
     </Card>
+    </motion.div>
   );
 };
