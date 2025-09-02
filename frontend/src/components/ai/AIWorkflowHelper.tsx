@@ -96,11 +96,133 @@ export const AIWorkflowHelper: React.FC<AIWorkflowHelperProps> = ({
 
   const handleApplySuggestion = (suggestionData: any) => {
     // 根据不同阶段和建议类型，应用建议到对应的数据结构
-    if (onDataChange && data) {
-      // 这里可以根据具体的建议内容解析并更新数据
-      // 示例：将建议添加到相应的字段
+    if (onDataChange && data && suggestionData) {
       console.log('Applying suggestion:', suggestionData);
-      // TODO: 实现具体的建议应用逻辑
+      
+      try {
+        const updatedData = { ...data };
+        
+        // 根据阶段和建议类型应用建议
+        switch (phase) {
+          case 'foundation':
+            applyFoundationSuggestion(updatedData, suggestionData);
+            break;
+          case 'differentiation':
+            applyDifferentiationSuggestion(updatedData, suggestionData);
+            break;
+          case 'approach':
+            applyApproachSuggestion(updatedData, suggestionData);
+            break;
+        }
+        
+        onDataChange(updatedData);
+      } catch (error) {
+        console.error('Failed to apply suggestion:', error);
+        // 可以在这里添加用户通知
+      }
+    }
+  };
+
+  // Foundation阶段建议应用逻辑
+  const applyFoundationSuggestion = (data: any, suggestionData: any) => {
+    const { type, suggestion, suggestions } = suggestionData;
+    
+    if (type === 'think' && suggestions) {
+      // 将思考建议转换为具体的问题或客户
+      suggestions.forEach((item: string) => {
+        if (item.includes('客户') || item.includes('用户')) {
+          // 添加到customers字段
+          if (!data.customers.includes(item)) {
+            data.customers.push(item);
+          }
+        } else if (item.includes('问题') || item.includes('痛点')) {
+          // 添加到problems字段
+          const newProblem = {
+            id: `suggestion-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            description: item,
+            severity: 3,
+            impact: 'some' as const
+          };
+          data.problems.push(newProblem);
+        } else if (item.includes('竞争') || item.includes('对手')) {
+          // 添加到competition字段
+          const newCompetitor = {
+            id: `suggestion-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            name: item,
+            type: 'direct' as const,
+            description: item
+          };
+          data.competition.push(newCompetitor);
+        } else if (item.includes('优势') || item.includes('长处')) {
+          // 添加到advantages字段
+          const newAdvantage = {
+            id: `suggestion-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            description: item
+          };
+          data.advantages.push(newAdvantage);
+        }
+      });
+    }
+  };
+
+  // Differentiation阶段建议应用逻辑
+  const applyDifferentiationSuggestion = (data: any, suggestionData: any) => {
+    const { type, suggestion, suggestions } = suggestionData;
+    
+    if (type === 'think' && suggestions) {
+      suggestions.forEach((item: string) => {
+        if (item.includes('因素') || item.includes('维度')) {
+          // 添加到customFactors字段
+          const newFactor = {
+            id: `suggestion-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            name: item,
+            description: `基于AI建议: ${item}`
+          };
+          data.customFactors.push(newFactor);
+        } else if (item.includes('原则') || item.includes('策略')) {
+          // 添加到principles字段
+          if (!data.principles.includes(item)) {
+            data.principles.push(item);
+          }
+        }
+      });
+    }
+  };
+
+  // Approach阶段建议应用逻辑
+  const applyApproachSuggestion = (data: any, suggestionData: any) => {
+    const { type, suggestion, suggestions } = suggestionData;
+    
+    if (type === 'think' && suggestions) {
+      suggestions.forEach((item: string) => {
+        if (item.includes('路径') || item.includes('方法') || item.includes('策略')) {
+          // 添加到paths字段
+          const newPath = {
+            id: `suggestion-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            name: item,
+            description: `基于AI建议: ${item}`,
+            feasibility: 3,
+            impact: 3,
+            timeline: '中期'
+          };
+          data.paths.push(newPath);
+        } else if (item.includes('透镜') || item.includes('视角') || item.includes('分析')) {
+          // 添加到magicLenses字段
+          const newLens = {
+            id: `suggestion-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            name: item,
+            description: `基于AI建议: ${item}`,
+            questions: [item],
+            icon: 'Lightbulb' // 默认图标
+          };
+          data.magicLenses.push(newLens);
+        }
+      });
+    }
+    
+    if (type === 'critique' && suggestion.includes('选择') && !data.reasoning) {
+      // 如果建议中包含对路径选择的critique，更新reasoning
+      data.reasoning = `AI建议: ${suggestion}`;
     }
   };
 

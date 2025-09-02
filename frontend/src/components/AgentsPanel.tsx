@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -16,6 +16,8 @@ interface AgentsPanelProps {
   isOpen: boolean;
   onClose: () => void;
   roomContext?: string;
+  selectedAgent?: 'think' | 'critique' | 'research' | null;
+  initialMessage?: string;
   className?: string;
 }
 
@@ -23,6 +25,8 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
   isOpen,
   onClose,
   roomContext = '',
+  selectedAgent: externalSelectedAgent,
+  initialMessage: externalInitialMessage,
   className,
 }) => {
   const { t } = useLanguage();
@@ -38,6 +42,28 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
     research: [],
   });
   const [loadingAgent, setLoadingAgent] = useState<string | null>(null);
+
+  // 监听外部代理选择和初始消息
+  useEffect(() => {
+    if (externalSelectedAgent) {
+      setActiveAgent(externalSelectedAgent);
+      
+      // 如果有初始消息，添加到消息历史中
+      if (externalInitialMessage) {
+        setAgentMessages(prev => ({
+          ...prev,
+          [externalSelectedAgent]: [
+            ...prev[externalSelectedAgent],
+            {
+              role: 'user',
+              content: externalInitialMessage,
+              timestamp: new Date()
+            }
+          ]
+        }));
+      }
+    }
+  }, [externalSelectedAgent, externalInitialMessage]);
 
   const agents = [
     {

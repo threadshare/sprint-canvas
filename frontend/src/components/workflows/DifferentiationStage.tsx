@@ -44,6 +44,7 @@ interface DifferentiationStageProps {
   readOnly?: boolean;
   onDataChange?: (data: DifferentiationData) => void;
   onNextStage?: () => void;
+  onOpenAIPanel?: (agentType: 'think' | 'critique' | 'research', initialMessage?: string) => void;
   className?: string;
 }
 
@@ -65,6 +66,7 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
   readOnly = false,
   onDataChange,
   onNextStage,
+  onOpenAIPanel,
   className,
 }) => {
   const { t } = useLanguage();
@@ -221,6 +223,8 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
           roomId={roomId}
           data={data}
           context={`当前阶段: differentiation, 经典因素: ${data.classicFactors.map(f => f.name).join(', ')}, 自定义因素: ${data.customFactors.map(f => f.name).join(', ')}, 原则: ${data.principles.join(', ')}`}
+          onOpenAIPanel={onOpenAIPanel}
+          onDataChange={onDataChange}
         />
       )}
 

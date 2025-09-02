@@ -8,7 +8,7 @@ import { CompetitionCard } from '@/components/cards/CompetitionCard';
 import { AdvantageCard } from '@/components/cards/AdvantageCard';
 import { AIWorkflowHelper } from '@/components/ai/AIWorkflowHelper';
 import { VoteDialog } from '@/components/VoteDialog';
-import { Plus, Users, AlertCircle, Target, TrendingUp, Vote } from 'lucide-react';
+import { Users, AlertCircle, Target, TrendingUp, Vote } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ProblemItem {
@@ -46,6 +46,7 @@ interface FoundationStageProps {
   readOnly?: boolean;
   onDataChange?: (data: FoundationData) => void;
   onNextStage?: () => void;
+  onOpenAIPanel?: (agentType: 'think' | 'critique' | 'research', initialMessage?: string) => void;
   className?: string;
   participants?: Array<{ id: string; name: string; online: boolean }>;
 }
@@ -59,12 +60,14 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
   readOnly = false,
   onDataChange,
   onNextStage,
+  onOpenAIPanel,
   className,
   participants = [],
 }) => {
   const { t } = useLanguage();
   const [voteDialogOpen, setVoteDialogOpen] = useState(false);
   const [voteSubject, setVoteSubject] = useState<'customers' | 'problems' | 'competition' | 'advantages'>('customers');
+  const [activeVote, setActiveVote] = useState<keyof FoundationData | null>(null);
   
   const canVote = participants.filter(p => p.online).length > 1;
 
@@ -165,16 +168,7 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
     onDataChange?.(newData);
   };
 
-  const startVoting = (section: keyof FoundationData) => {
-    if (data[section].length === 0) return;
-    
-    setActiveVote(section);
-  };
-
-  const handleVote = (optionId: string, comment?: string) => {
-    // TODO: 实现投票逻辑
-    console.log('投票:', optionId, comment);
-  };
+  // 预留投票入口（当前未启用）
 
   const isStageComplete = () => {
     return Object.values(data).every(items => items.length > 0);
@@ -201,6 +195,8 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
           roomId={roomId}
           data={data}
           context={`当前阶段: foundation, 客户: ${data.customers.join(', ')}, 问题: ${data.problems.map(p => p.description).join(', ')}, 竞争: ${data.competition.map(c => c.name).join(', ')}, 优势: ${data.advantages.map(a => a.description).join(', ')}`}
+          onOpenAIPanel={onOpenAIPanel}
+          onDataChange={onDataChange}
         />
       )}
 

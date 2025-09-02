@@ -58,3 +58,4 @@ logs/
 *.temp
 tmp/
 temp/
+backend/api

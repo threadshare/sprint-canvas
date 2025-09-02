@@ -53,6 +53,7 @@ interface ApproachStageProps {
   readOnly?: boolean;
   onDataChange?: (data: ApproachData) => void;
   onComplete?: () => void;
+  onOpenAIPanel?: (agentType: 'think' | 'critique' | 'research', initialMessage?: string) => void;
   className?: string;
 }
 
@@ -93,6 +94,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
   readOnly = false,
   onDataChange,
   onComplete,
+  onOpenAIPanel,
   className,
 }) => {
   const { t } = useLanguage();
@@ -272,6 +274,8 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
           roomId={roomId}
           data={data}
           context={`当前阶段: approach, 执行路径: ${data.paths.map(p => p.name).join(', ')}, 选中路径: ${data.selectedPath}, 魔法透镜: ${data.magicLenses.map(l => l.name).join(', ')}`}
+          onOpenAIPanel={onOpenAIPanel}
+          onDataChange={onDataChange}
         />
       )}
 

@@ -129,6 +129,15 @@ function App() {
   
   // AI Panel state
   const [showAIPanel, setShowAIPanel] = useState(false)
+  const [selectedAgent, setSelectedAgent] = useState<'think' | 'critique' | 'research' | null>(null)
+  const [initialMessage, setInitialMessage] = useState<string>('')
+
+  // AI面板处理函数
+  const handleOpenAIPanel = (agentType: 'think' | 'critique' | 'research', initialMsg?: string) => {
+    setSelectedAgent(agentType)
+    setInitialMessage(initialMsg || '')
+    setShowAIPanel(true)
+  }
   
   // URL room ID for invitation links
   const [urlRoomId, setUrlRoomId] = useState<string | null>(null)
@@ -472,7 +481,7 @@ function App() {
 
   return (
     <>
-      <div className={`min-h-screen gradient-foundation transition-all duration-300 ${showAIPanel ? 'mr-96' : ''}`}>
+      <div className={`min-h-screen overflow-x-hidden gradient-foundation transition-all duration-300 ${showAIPanel ? 'mr-96' : ''}`}>
         <RoomHeader
           room={currentRoom}
           currentUserId={currentUserId}
@@ -512,10 +521,8 @@ function App() {
           )}
 
           <div className="flex gap-8">
-            {/* Left sidebar can show stage navigation */}
-            <aside className="w-64 flex-shrink-0">
-              {/* Stage progress will be handled by Layout component */}
-            </aside>
+            {/* Sidebar reserved for future stage navigation; disabled to keep content centered */}
+            {/* <aside className="w-64 flex-shrink-0"></aside> */}
 
             {/* Main content */}
             <main className="flex-1 min-w-0">
@@ -530,6 +537,7 @@ function App() {
                   participants={participants}
                   onDataChange={handleFoundationDataChange}
                   onNextStage={() => handleNextStage('differentiation')}
+                  onOpenAIPanel={handleOpenAIPanel}
                 />
               )}
               
@@ -541,6 +549,7 @@ function App() {
                   currentUserName={currentUserName}
                   onDataChange={handleDifferentiationDataChange}
                   onNextStage={() => handleNextStage('approach')}
+                  onOpenAIPanel={handleOpenAIPanel}
                 />
               )}
               
@@ -552,6 +561,7 @@ function App() {
                   currentUserName={currentUserName}
                   onDataChange={handleApproachDataChange}
                   onComplete={() => handleNextStage('completed')}
+                  onOpenAIPanel={handleOpenAIPanel}
                 />
               )}
               
@@ -664,6 +674,8 @@ function App() {
         isOpen={showAIPanel}
         onClose={() => setShowAIPanel(false)}
         roomContext={currentRoom ? `房间: ${currentRoom.name}, 当前阶段: ${currentRoom.status}, 用户: ${currentUserName}` : ''}
+        selectedAgent={selectedAgent}
+        initialMessage={initialMessage}
       />
       
       <Toaster />

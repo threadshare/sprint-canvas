@@ -245,6 +245,17 @@ export const translations = {
       inputPlaceholder: '输入您的问题...',
       send: '发送',
       thinking: '思考中...',
+      suggestions: '条建议',
+      complete: '完成',
+      dialog: 'AI 对话',
+      selectAssistant: '选择 AI 助手',
+      thinkAssistant: '帮我想 - 补充思考',
+      critiqueAssistant: '批判我 - 挑战假设',
+      researchAssistant: '查一查 - 深度研究',
+      tip: '小贴士',
+      foundationTip: '先填写客户和问题信息，AI 会自动提供针对性建议',
+      differentiationTip: '添加差异化因素后，AI 会帮助分析竞争优势',
+      approachTip: '列出执行路径后，AI 会协助评估可行性',
     },
     
     // Export
@@ -304,22 +315,7 @@ export const translations = {
       foundationReport: 'Foundation Sprint 报告',
       hypothesis: '创始假设',
     },
-    
-    // AI
-    ai: {
-      assistant: 'AI 助手',
-      suggestions: '条建议',
-      complete: '完成',
-      dialog: 'AI 对话',
-      selectAssistant: '选择 AI 助手',
-      thinkAssistant: '帮我想 - 补充思考',
-      critiqueAssistant: '批判我 - 挑战假设',
-      researchAssistant: '查一查 - 深度研究',
-      tip: '小贴士',
-      foundationTip: '先填写客户和问题信息，AI 会自动提供针对性建议',
-      differentiationTip: '添加差异化因素后，AI 会帮助分析竞争优势',
-      approachTip: '列出执行路径后，AI 会协助评估可行性',
-    },
+
   },
   
   en: {
@@ -566,6 +562,17 @@ export const translations = {
       inputPlaceholder: 'Enter your question...',
       send: 'Send',
       thinking: 'Thinking...',
+      suggestions: 'suggestions',
+      complete: 'complete',
+      dialog: 'AI Dialog',
+      selectAssistant: 'Select AI Assistant',
+      thinkAssistant: 'Help Me Think - Expand Ideas',
+      critiqueAssistant: 'Challenge Me - Question Assumptions',
+      researchAssistant: 'Research - Deep Analysis',
+      tip: 'Tip',
+      foundationTip: 'Fill in customer and problem information first, AI will provide targeted suggestions',
+      differentiationTip: 'After adding differentiation factors, AI will help analyze competitive advantages',
+      approachTip: 'After listing execution paths, AI will help evaluate feasibility',
     },
     
     // Export
@@ -625,22 +632,7 @@ export const translations = {
       foundationReport: 'Foundation Sprint Report',
       hypothesis: 'Founding Hypothesis',
     },
-    
-    // AI
-    ai: {
-      assistant: 'AI Assistant',
-      suggestions: 'suggestions',
-      complete: 'complete',
-      dialog: 'AI Dialog',
-      selectAssistant: 'Select AI Assistant',
-      thinkAssistant: 'Help Me Think - Expand Ideas',
-      critiqueAssistant: 'Challenge Me - Question Assumptions',
-      researchAssistant: 'Research - Deep Analysis',
-      tip: 'Tip',
-      foundationTip: 'Fill in customer and problem information first, AI will provide targeted suggestions',
-      differentiationTip: 'After adding differentiation factors, AI will help analyze competitive advantages',
-      approachTip: 'After listing execution paths, AI will help evaluate feasibility',
-    },
+
   },
 }
 

@@ -18,6 +18,7 @@ interface LayoutProps {
   currentStage?: 'foundation' | 'differentiation' | 'approach' | 'completed';
   roomName?: string;
   onStageChange?: (stage: string) => void;
+  onOpenAIPanel?: (agentType: 'think' | 'critique' | 'research', initialMessage?: string) => void;
   className?: string;
 }
 
@@ -50,13 +51,27 @@ export const Layout: React.FC<LayoutProps> = ({
   currentStage = 'foundation',
   roomName = 'Foundation Sprint 工作室',
   onStageChange,
+  onOpenAIPanel,
   className,
 }) => {
   const [isAgentsPanelOpen, setIsAgentsPanelOpen] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<'think' | 'critique' | 'research' | null>(null);
+  const [initialMessage, setInitialMessage] = useState<string>('');
+
+  const handleOpenAIPanel = (agentType: 'think' | 'critique' | 'research', initialMsg?: string) => {
+    setSelectedAgent(agentType);
+    setInitialMessage(initialMsg || '');
+    setIsAgentsPanelOpen(true);
+    
+    // 如果有外部处理函数，也调用它
+    if (onOpenAIPanel) {
+      onOpenAIPanel(agentType, initialMsg);
+    }
+  };
   return (
     <div className={cn('min-h-screen gradient-foundation', className)}>
       {/* 顶部导航 */}
-      <header className="paper-card border-b-0 rounded-none shadow-paper bg-white/80 backdrop-blur-sm sticky top-0 z-40">
+      <header className="header-card border-b-0 rounded-none shadow-paper bg-white/80 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-4">
@@ -189,6 +204,8 @@ export const Layout: React.FC<LayoutProps> = ({
         isOpen={isAgentsPanelOpen}
         onClose={() => setIsAgentsPanelOpen(false)}
         roomContext={`当前阶段: ${currentStage}, 房间: ${roomName}`}
+        selectedAgent={selectedAgent}
+        initialMessage={initialMessage}
       />
     </div>
   );
