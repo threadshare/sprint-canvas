@@ -51,10 +51,10 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
 
   const getStageDisplayName = (stage: string) => {
     switch (stage) {
-      case 'foundation': return '基础阶段';
-      case 'differentiation': return '差异化阶段';
-      case 'approach': return '方法阶段';
-      case 'completed': return '已完成';
+      case 'foundation': return t('stages.foundation');
+      case 'differentiation': return t('stages.differentiation');
+      case 'approach': return t('stages.approach');
+      case 'completed': return t('stages.completed');
       default: return stage;
     }
   };
@@ -83,13 +83,13 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
     try {
       await navigator.clipboard.writeText(room.id);
       toast({
-        title: '房间ID已复制',
-        description: '分享给团队成员加入讨论',
+        title: t('room.copySuccess'),
+        description: t('room.copyDesc'),
       });
     } catch (error) {
       toast({
-        title: '复制失败',
-        description: '请手动复制房间ID',
+        title: t('room.copyFailed'),
+        description: t('room.copyManual'),
         variant: 'destructive',
       });
     }
@@ -100,13 +100,13 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
     try {
       await navigator.clipboard.writeText(inviteLink);
       toast({
-        title: '邀请链接已复制',
-        description: '发送给团队成员快速加入',
+        title: t('room.copySuccess'),
+        description: t('room.copyDesc'),
       });
     } catch (error) {
       toast({
-        title: '复制失败',
-        description: '请手动复制邀请链接',
+        title: t('room.copyFailed'),
+        description: t('room.copyManual'),
         variant: 'destructive',
       });
     }
@@ -139,14 +139,14 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
                 </Badge>
               </div>
               <div className="flex items-center gap-4 text-sm text-foundation/70">
-                <span>房间ID: {room.id.slice(0, 8)}...</span>
+                <span>{t('room.roomIdPrefix')}: {room.id.slice(0, 8)}...</span>
                 <div className="flex items-center gap-1">
                   {isConnected ? (
                     <Wifi className="h-4 w-4 text-green-600" />
                   ) : (
                     <WifiOff className="h-4 w-4 text-red-600" />
                   )}
-                  <span>{isConnected ? '已连接' : '连接中断'}</span>
+                  <span>{isConnected ? t('room.connected') : t('room.disconnected')}</span>
                 </div>
               </div>
             </div>
@@ -171,7 +171,7 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
                 )}
               </div>
               <span className="text-sm text-foundation/70">
-                {participants.length} 人在线
+                {participants.length} {t('room.peopleOnline')}
               </span>
             </div>
 
@@ -188,19 +188,19 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Share2 className="h-4 w-4 mr-1" />
-                  分享
+                  {t('room.share')}
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                  <DialogTitle>邀请团队成员</DialogTitle>
+                  <DialogTitle>{t('room.inviteMembers')}</DialogTitle>
                   <DialogDescription>
-                    分享房间ID或邀请链接让团队成员加入讨论
+                    {t('room.shareRoomDesc')}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label>房间ID</Label>
+                    <Label>{t('room.roomCode')}</Label>
                     <div className="flex gap-2">
                       <Input value={room.id} readOnly />
                       <Button variant="outline" size="sm" onClick={copyRoomId}>
@@ -209,7 +209,7 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label>邀请链接</Label>
+                    <Label>{t('room.inviteLink')}</Label>
                     <div className="flex gap-2">
                       <Input 
                         value={`${window.location.origin}?roomId=${room.id}`}

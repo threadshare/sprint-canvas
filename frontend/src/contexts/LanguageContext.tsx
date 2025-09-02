@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
-import { Language, getTranslation } from '@/lib/i18n/translations'
+import React, { createContext, useContext, useState } from 'react'
+import type { Language } from '@/lib/i18n/translations'
+import { getTranslation } from '@/lib/i18n/translations'
 
 interface LanguageContextType {
   language: Language

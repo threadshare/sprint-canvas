@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { RoomEntry } from '@/components/RoomEntry'
 import { RoomHeader } from '@/components/RoomHeader'
 import { FoundationStage } from '@/components/workflows/FoundationStage'
@@ -13,7 +13,6 @@ import type { Room } from '@/lib/api/types'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle, Loader2, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 // Convert backend data format to frontend format for compatibility
@@ -396,8 +395,7 @@ function App() {
 
             {/* Main content */}
             <main className="flex-1 min-w-0">
-              {/* 添加房间状态检查日志 */}
-              {console.log('🏠 当前房间状态:', currentRoom.status, '房间ID:', currentRoom.id)}
+              {/* 房间状态检查 */}
               
               {currentRoom.status === 'foundation' && (
                 <FoundationStage

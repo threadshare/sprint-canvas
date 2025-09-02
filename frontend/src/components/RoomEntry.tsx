@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -44,7 +44,7 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
   const handleCreateRoom = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!createForm.roomName.trim() || !createForm.userName.trim()) {
-      setError('请填写房间名称和您的姓名');
+      setError(t('room.fillRequiredFields'));
       return;
     }
 
@@ -62,7 +62,7 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
       
       onRoomJoined(room, userId, createForm.userName.trim());
     } catch (error) {
-      setError(error instanceof Error ? error.message : '创建房间失败，请重试');
+      setError(error instanceof Error ? error.message : t('room.createRoomError'));
     } finally {
       setLoading(false);
     }
@@ -71,7 +71,7 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
   const handleJoinRoom = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!joinForm.roomId.trim() || !joinForm.userName.trim()) {
-      setError('请填写房间ID和您的姓名');
+      setError(t('room.fillRequiredFields'));
       return;
     }
 
@@ -86,7 +86,7 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
       
       onRoomJoined(room, userId, joinForm.userName.trim());
     } catch (error) {
-      setError(error instanceof Error ? error.message : '加入房间失败，请检查房间ID是否正确');
+      setError(error instanceof Error ? error.message : t('room.joinRoomError'));
     } finally {
       setLoading(false);
     }
@@ -94,6 +94,11 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
 
   return (
     <div className="min-h-screen gradient-foundation flex items-center justify-center p-4">
+      {/* Language Switcher - Fixed Position */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSwitcher />
+      </div>
+      
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="text-center mb-8">
@@ -104,10 +109,10 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            Foundation Sprint
+            {t('room.title')}
           </h1>
           <p className="text-foundation/70 text-lg">
-            科学思考，快速验证想法
+            {t('room.subtitle')}
           </p>
         </div>
 
@@ -115,10 +120,10 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
         <Card className="paper-card shadow-paper border-foundation/10">
           <CardHeader>
             <CardTitle className="text-center text-xl text-foundation">
-              开始你的 Foundation Sprint
+              {t('room.title')}
             </CardTitle>
             <CardDescription className="text-center">
-              创建新的协作房间或加入现有的团队讨论
+              {t('room.subtitle')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -135,21 +140,21 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
               <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="create" className="flex items-center gap-2">
                   <Plus className="h-4 w-4" />
-                  创建房间
+                  {t('room.createRoom')}
                 </TabsTrigger>
                 <TabsTrigger value="join" className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
-                  加入房间
+                  {t('room.joinRoom')}
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="create" className="space-y-4">
                 <form onSubmit={handleCreateRoom} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="roomName">房间名称</Label>
+                    <Label htmlFor="roomName">{t('room.roomName')}</Label>
                     <Input
                       id="roomName"
-                      placeholder="例如：产品创新讨论"
+                      placeholder={t('room.roomName')}
                       value={createForm.roomName}
                       onChange={(e) => setCreateForm({ ...createForm, roomName: e.target.value })}
                       disabled={loading}
@@ -157,10 +162,10 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="createUserName">您的姓名</Label>
+                    <Label htmlFor="createUserName">{t('room.userName')}</Label>
                     <Input
                       id="createUserName"
-                      placeholder="请输入您的姓名"
+                      placeholder={t('room.userName')}
                       value={createForm.userName}
                       onChange={(e) => setCreateForm({ ...createForm, userName: e.target.value })}
                       disabled={loading}
@@ -171,12 +176,12 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        创建中...
+                        {t('room.creating')}
                       </>
                     ) : (
                       <>
                         <Plus className="mr-2 h-4 w-4" />
-                        创建房间
+                        {t('room.createRoom')}
                       </>
                     )}
                   </Button>
@@ -185,19 +190,19 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
                 <div className="text-center text-sm text-foundation/60 space-y-2">
                   <div className="flex items-center justify-center gap-2">
                     <Clock className="h-4 w-4" />
-                    <span>预计用时：2-3小时</span>
+                    <span>{t('room.estimatedTime')}</span>
                   </div>
-                  <p>创建房间后，您可以邀请团队成员一起参与</p>
+                  <p>{t('room.inviteTeam')}</p>
                 </div>
               </TabsContent>
 
               <TabsContent value="join" className="space-y-4">
                 <form onSubmit={handleJoinRoom} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="roomId">房间ID</Label>
+                    <Label htmlFor="roomId">{t('room.roomCode')}</Label>
                     <Input
                       id="roomId"
-                      placeholder="粘贴房间ID"
+                      placeholder={t('room.roomCode')}
                       value={joinForm.roomId}
                       onChange={(e) => setJoinForm({ ...joinForm, roomId: e.target.value })}
                       disabled={loading}
@@ -205,10 +210,10 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="joinUserName">您的姓名</Label>
+                    <Label htmlFor="joinUserName">{t('room.userName')}</Label>
                     <Input
                       id="joinUserName"
-                      placeholder="请输入您的姓名"
+                      placeholder={t('room.userName')}
                       value={joinForm.userName}
                       onChange={(e) => setJoinForm({ ...joinForm, userName: e.target.value })}
                       disabled={loading}
@@ -219,19 +224,19 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        加入中...
+                        {t('room.joining')}
                       </>
                     ) : (
                       <>
                         <Users className="mr-2 h-4 w-4" />
-                        加入房间
+                        {t('room.joinRoom')}
                       </>
                     )}
                   </Button>
                 </form>
 
                 <div className="text-center text-sm text-foundation/60">
-                  <p>输入房间创建者分享的ID即可加入讨论</p>
+                  <p>{t('room.pasteRoomId')}</p>
                 </div>
               </TabsContent>
             </Tabs>
@@ -241,20 +246,20 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
             <div className="bg-blue-50 rounded-lg p-4">
               <h3 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
                 <Lightbulb className="h-4 w-4" />
-                什么是 Foundation Sprint？
+                {t('room.whatIsFS')}
               </h3>
               <ul className="text-sm text-blue-800 space-y-1">
-                <li>• 基于 Google Ventures 方法论的快速决策工具</li>
-                <li>• 通过3个阶段帮助团队达成核心战略共识</li>
-                <li>• 配备AI助手提供深度分析和建议</li>
-                <li>• 支持多人实时协作和投票决策</li>
+                <li>• {t('room.fsDesc1')}</li>
+                <li>• {t('room.fsDesc2')}</li>
+                <li>• {t('room.fsDesc3')}</li>
+                <li>• {t('room.fsDesc4')}</li>
               </ul>
             </div>
           </CardContent>
         </Card>
 
         <div className="text-center mt-6 text-foundation/50 text-sm">
-          Powered by Foundation Sprint AI
+          {t('room.poweredBy')}
         </div>
       </div>
     </div>
