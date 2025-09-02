@@ -131,7 +131,7 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined, initialRoomI
           className="bg-white/90 backdrop-blur-sm hover:bg-white"
         >
           <HelpCircle className="w-4 h-4 mr-2" />
-          了解Foundation Sprint
+          {t('room.learnFoundationSprint')}
         </Button>
       </div>
       
@@ -283,7 +283,7 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined, initialRoomI
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-medium text-blue-900 flex items-center gap-2">
                   <Lightbulb className="h-4 w-4" />
-                  什么是 Foundation Sprint？
+                  {t('room.whatIsFoundationSprint')}
                 </h3>
                 <Button
                   variant="ghost"
@@ -292,20 +292,20 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined, initialRoomI
                   className="text-blue-700 hover:text-blue-900 hover:bg-blue-100 text-xs"
                 >
                   <BookOpen className="w-3 h-3 mr-1" />
-                  详细了解
+                  {t('room.detailedLearn')}
                 </Button>
               </div>
               <ul className="text-sm text-blue-800 space-y-1">
-                <li>• 10小时完成传统数月的战略讨论</li>
-                <li>• 科学的结构化决策流程</li>
-                <li>• 三大阶段：基础-差异化-方法</li>
-                <li>• 来自Google Ventures的验证方法</li>
+                <li>• {t('room.fsFeature1')}</li>
+                <li>• {t('room.fsFeature2')}</li>
+                <li>• {t('room.fsFeature3')}</li>
+                <li>• {t('room.fsFeature4')}</li>
               </ul>
               
               <div className="mt-3 pt-3 border-t border-blue-200">
                 <div className="flex items-center gap-2 text-xs text-blue-600">
                   <Clock className="w-3 h-3" />
-                  <span>预计用时：10小时 (可分2天完成)</span>
+                  <span>{t('room.estimatedTimeDetailed')}</span>
                 </div>
               </div>
             </div>

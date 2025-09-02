@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { 
   ArrowRight, 
@@ -10,7 +9,6 @@ import {
   Users, 
   Target, 
   Lightbulb, 
-  TrendingUp, 
   CheckCircle,
   Zap,
   Brain,
@@ -38,12 +36,12 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
   const [currentSection, setCurrentSection] = useState(0);
 
   const sections = [
-    { id: 'hero', title: '什么是Foundation Sprint' },
-    { id: 'problem', title: '解决的问题' },
-    { id: 'science', title: '科学原理' },
-    { id: 'process', title: '三大阶段' },
-    { id: 'ai-era', title: 'AI时代的价值' },
-    { id: 'results', title: '预期成果' }
+    { id: 'hero', title: t('intro.nav.hero') },
+    { id: 'problem', title: t('intro.nav.problem') },
+    { id: 'science', title: t('intro.nav.science') },
+    { id: 'process', title: t('intro.nav.process') },
+    { id: 'ai-era', title: t('intro.nav.aiEra') },
+    { id: 'results', title: t('intro.nav.results') }
   ];
 
   return (
@@ -57,8 +55,8 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                 <Lightbulb className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Foundation Sprint 方法指南</h1>
-                <p className="text-gray-600">来自Google Ventures的科学创新方法</p>
+                <h1 className="text-2xl font-bold text-gray-900">{t('intro.title')}</h1>
+                <p className="text-gray-600">{t('intro.subtitle')}</p>
               </div>
             </div>
             <Button variant="ghost" size="sm" onClick={onClose}>
@@ -90,33 +88,31 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                 <div className="text-center">
                   <div className="mb-6">
                     <Badge className="bg-green-100 text-green-800 text-lg px-4 py-2">
-                      来自Google Ventures
+                      {t('intro.hero.fromGoogle')}
                     </Badge>
                   </div>
                   <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                    什么是 Foundation Sprint？
+                    {t('intro.hero.whatIs')}
                   </h2>
                   <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                    一个仅需 <span className="font-bold text-blue-600">10小时</span>，就能完成传统模式下 
-                    <span className="font-bold text-red-600">数月工作</span> 的科学方法论
+                    {t('intro.hero.description')}
                   </p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8">
-                  <Card className="border-2 border-blue-200 bg-blue-50">
+                                      <Card className="border-2 border-blue-200 bg-blue-50">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3 text-blue-900">
                         <Quote className="w-6 h-6" />
-                        核心理念
+                        {t('intro.hero.coreIdea')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <blockquote className="text-blue-800 italic text-lg leading-relaxed">
-                        "让项目最核心的成员清空所有日程安排，完全投入进来，
-                        通过结构化流程在最早阶段奠定坚实的战略基础。"
+                        "{t('intro.hero.coreQuote')}"
                       </blockquote>
                       <div className="mt-4 text-sm text-blue-600">
-                        — Jake Knapp & John Zeratsky, Google Ventures
+                        {t('intro.hero.coreSource')}
                       </div>
                     </CardContent>
                   </Card>
@@ -126,9 +122,9 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                       <CardContent className="pt-6">
                         <div className="flex items-center gap-3 mb-2">
                           <CheckCircle className="w-5 h-5 text-green-600" />
-                          <span className="font-semibold text-green-900">验证成果</span>
+                          <span className="font-semibold text-green-900">{t('intro.hero.verifiedResults')}</span>
                         </div>
-                        <p className="text-green-800">数百家创业公司成功实践</p>
+                        <p className="text-green-800">{t('intro.hero.verifiedDesc')}</p>
                       </CardContent>
                     </Card>
 
@@ -136,9 +132,9 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                       <CardContent className="pt-6">
                         <div className="flex items-center gap-3 mb-2">
                           <Clock className="w-5 h-5 text-purple-600" />
-                          <span className="font-semibold text-purple-900">高效决策</span>
+                          <span className="font-semibold text-purple-900">{t('intro.hero.efficientDecision')}</span>
                         </div>
-                        <p className="text-purple-800">10小时 vs 传统数月讨论</p>
+                        <p className="text-purple-800">{t('intro.hero.efficientDesc')}</p>
                       </CardContent>
                     </Card>
 
@@ -146,9 +142,9 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                       <CardContent className="pt-6">
                         <div className="flex items-center gap-3 mb-2">
                           <Target className="w-5 h-5 text-orange-600" />
-                          <span className="font-semibold text-orange-900">科学验证</span>
+                          <span className="font-semibold text-orange-900">{t('intro.hero.scientificVerification')}</span>
                         </div>
-                        <p className="text-orange-800">结构化流程确保客观决策</p>
+                        <p className="text-orange-800">{t('intro.hero.scientificDesc')}</p>
                       </CardContent>
                     </Card>
                   </div>
@@ -161,10 +157,10 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
               <div className="space-y-8">
                 <div className="text-center">
                   <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                    为什么需要 Foundation Sprint？
+                    {t('intro.problem.whyNeed')}
                   </h2>
                   <p className="text-lg text-gray-600">
-                    解决创业团队最根本的战略分歧问题
+                    {t('intro.problem.description')}
                   </p>
                 </div>
 
@@ -172,14 +168,14 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                   <div>
                     <h3 className="text-2xl font-bold text-red-600 mb-6 flex items-center gap-3">
                       <Shield className="w-6 h-6" />
-                      传统模式的问题
+                      {t('intro.problem.traditionalProblems')}
                     </h3>
                     <div className="space-y-4">
                       {[
-                        { icon: "🔄", title: "反复纠结", desc: "在最根本的问题上无休止讨论" },
-                        { icon: "❓", title: "缺乏共识", desc: "客户是谁？解决什么问题？" },
-                        { icon: "⏰", title: "浪费时间", desc: "数月时间仍无法达成战略共识" },
-                        { icon: "💸", title: "盲目开发", desc: "没有验证假设就开始大量投入" }
+                        { icon: "🔄", title: t('intro.problem.endlessDiscussion'), desc: t('intro.problem.endlessDesc') },
+                        { icon: "❓", title: t('intro.problem.lackConsensus'), desc: t('intro.problem.lackDesc') },
+                        { icon: "⏰", title: t('intro.problem.wasteTime'), desc: t('intro.problem.wasteDesc') },
+                        { icon: "💸", title: t('intro.problem.blindDevelopment'), desc: t('intro.problem.blindDesc') }
                       ].map((item, i) => (
                         <Card key={i} className="border border-red-200 bg-red-50">
                           <CardContent className="pt-4">
@@ -199,14 +195,14 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                   <div>
                     <h3 className="text-2xl font-bold text-green-600 mb-6 flex items-center gap-3">
                       <Sparkles className="w-6 h-6" />
-                      Foundation Sprint的解决方案
+                      {t('intro.problem.fsolutions')}
                     </h3>
                     <div className="space-y-4">
                       {[
-                        { icon: "🎯", title: "聚焦决策", desc: "强制团队专注于最关键的战略问题" },
-                        { icon: "📊", title: "结构化流程", desc: "Note and Vote机制确保科学决策" },
-                        { icon: "⚡", title: "快速共识", desc: "10小时内达成所有核心战略共识" },
-                        { icon: "🔬", title: "假设验证", desc: "形成明确假设，后续Design Sprint验证" }
+                        { icon: "🎯", title: t('intro.problem.focusedDecision'), desc: t('intro.problem.focusedDesc') },
+                        { icon: "📊", title: t('intro.problem.structuredProcess'), desc: t('intro.problem.structuredDesc') },
+                        { icon: "⚡", title: t('intro.problem.rapidConsensus'), desc: t('intro.problem.rapidDesc') },
+                        { icon: "🔬", title: t('intro.problem.hypothesisValidation'), desc: t('intro.problem.hypothesisDesc') }
                       ].map((item, i) => (
                         <Card key={i} className="border border-green-200 bg-green-50">
                           <CardContent className="pt-4">
@@ -231,34 +227,34 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
               <div className="space-y-8">
                 <div className="text-center">
                   <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                    科学原理：为什么如此有效？
+                    {t('intro.science.title')}
                   </h2>
                   <p className="text-lg text-gray-600">
-                    基于认知科学和群体决策理论的方法设计
+                    {t('intro.science.description')}
                   </p>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-6">
-                  <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100">
+                                      <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3 text-blue-900">
                         <Brain className="w-6 h-6" />
-                        认知科学基础
+                        {t('intro.science.cognitiveScience')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2 text-blue-800">
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 mt-1 text-blue-600" />
-                          <span className="text-sm">独立思考避免群体偏见</span>
+                          <span className="text-sm">{t('intro.science.independentThinking')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 mt-1 text-blue-600" />
-                          <span className="text-sm">时间限制提升专注度</span>
+                          <span className="text-sm">{t('intro.science.timeLimit')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 mt-1 text-blue-600" />
-                          <span className="text-sm">结构化减少认知负担</span>
+                          <span className="text-sm">{t('intro.science.structuredReduction')}</span>
                         </li>
                       </ul>
                     </CardContent>
@@ -268,22 +264,22 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3 text-purple-900">
                         <Users className="w-6 h-6" />
-                        群体决策理论
+                        {t('intro.science.groupDecision')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2 text-purple-800">
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 mt-1 text-purple-600" />
-                          <span className="text-sm">Note and Vote机制</span>
+                          <span className="text-sm">{t('intro.science.noteVote')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 mt-1 text-purple-600" />
-                          <span className="text-sm">避免权威影响决策</span>
+                          <span className="text-sm">{t('intro.science.avoidAuthority')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 mt-1 text-purple-600" />
-                          <span className="text-sm">多元观点整合</span>
+                          <span className="text-sm">{t('intro.science.multiPerspective')}</span>
                         </li>
                       </ul>
                     </CardContent>
@@ -293,22 +289,22 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3 text-green-900">
                         <BarChart3 className="w-6 h-6" />
-                        实证验证
+                        {t('intro.science.empiricalValidation')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2 text-green-800">
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 mt-1 text-green-600" />
-                          <span className="text-sm">数百家公司成功案例</span>
+                          <span className="text-sm">{t('intro.science.hundredsSuccess')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 mt-1 text-green-600" />
-                          <span className="text-sm">Google Ventures验证</span>
+                          <span className="text-sm">{t('intro.science.googleValidation')}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-4 h-4 mt-1 text-green-600" />
-                          <span className="text-sm">Character Capital实践</span>
+                          <span className="text-sm">{t('intro.science.characterPractice')}</span>
                         </li>
                       </ul>
                     </CardContent>
@@ -318,19 +314,19 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                 <Card className="border-2 border-yellow-200 bg-yellow-50">
                   <CardContent className="pt-6">
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-yellow-800 mb-2">10小时 vs 数月</div>
+                      <div className="text-4xl font-bold text-yellow-800 mb-2">{t('intro.science.timeComparison')}</div>
                       <p className="text-yellow-700 text-lg">
-                        通过结构化流程，将传统需要数月的战略讨论压缩到10小时
+                        {t('intro.science.timeDesc')}
                       </p>
                       <div className="mt-4 flex justify-center gap-8 text-sm">
                         <div className="text-center">
-                          <div className="font-bold text-red-600">传统模式</div>
-                          <div className="text-red-500">3-6个月</div>
+                          <div className="font-bold text-red-600">{t('intro.science.traditionalMode')}</div>
+                          <div className="text-red-500">{t('intro.science.traditionalTime')}</div>
                         </div>
                         <ArrowRight className="w-6 h-6 text-gray-400 self-center" />
                         <div className="text-center">
                           <div className="font-bold text-green-600">Foundation Sprint</div>
-                          <div className="text-green-500">10小时</div>
+                          <div className="text-green-500">{t('intro.science.foundationTime')}</div>
                         </div>
                       </div>
                     </div>
@@ -344,10 +340,10 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
               <div className="space-y-8">
                 <div className="text-center">
                   <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                    三大核心阶段
+                    {t('intro.process.title')}
                   </h2>
                   <p className="text-lg text-gray-600">
-                    环环相扣的结构化流程，确保每个环节都有科学依据
+                    {t('intro.process.description')}
                   </p>
                 </div>
 
@@ -360,8 +356,8 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                           <span className="text-2xl font-bold">1</span>
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold">基础阶段 (Foundation)</h3>
-                          <p className="text-blue-100">回答看似简单却至关重要的基础问题</p>
+                          <h3 className="text-2xl font-bold">{t('intro.process.stage1.title')}</h3>
+                          <p className="text-blue-100">{t('intro.process.stage1.subtitle')}</p>
                         </div>
                       </div>
                     </div>
@@ -370,44 +366,44 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                         <div>
                           <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <Target className="w-5 h-5" />
-                            核心问题
+                            {t('intro.process.stage1.coreQuestions')}
                           </h4>
                           <ul className="space-y-2">
                             <li className="flex items-start gap-2">
                               <ChevronRight className="w-4 h-4 mt-1 text-blue-600" />
-                              <span>你的客户是谁？</span>
+                              <span>{t('intro.process.stage1.whoCustomers')}</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <ChevronRight className="w-4 h-4 mt-1 text-blue-600" />
-                              <span>你为他们解决什么问题？</span>
+                              <span>{t('intro.process.stage1.whatProblems')}</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <ChevronRight className="w-4 h-4 mt-1 text-blue-600" />
-                              <span>市场上的竞争格局如何？</span>
+                              <span>{t('intro.process.stage1.competitive')}</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <ChevronRight className="w-4 h-4 mt-1 text-blue-600" />
-                              <span>你的团队有哪些独特优势？</span>
+                              <span>{t('intro.process.stage1.advantages')}</span>
                             </li>
                           </ul>
                         </div>
                         <div>
                           <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <Lightbulb className="w-5 h-5" />
-                            方法特色
+                            {t('intro.process.stage1.methodFeatures')}
                           </h4>
                           <div className="space-y-3">
                             <div className="bg-blue-50 p-3 rounded-lg">
-                              <div className="font-semibold text-blue-900">Note and Vote</div>
-                              <div className="text-sm text-blue-700">独自思考，避免群体偏见</div>
+                              <div className="font-semibold text-blue-900">{t('intro.process.stage1.noteVoteTitle')}</div>
+                              <div className="text-sm text-blue-700">{t('intro.process.stage1.noteVoteDesc')}</div>
                             </div>
                             <div className="bg-blue-50 p-3 rounded-lg">
-                              <div className="font-semibold text-blue-900">同时展示</div>
-                              <div className="text-sm text-blue-700">所有想法一起展示讨论</div>
+                              <div className="font-semibold text-blue-900">{t('intro.process.stage1.simultaneousDisplay')}</div>
+                              <div className="text-sm text-blue-700">{t('intro.process.stage1.simultaneousDesc')}</div>
                             </div>
                             <div className="bg-blue-50 p-3 rounded-lg">
-                              <div className="font-semibold text-blue-900">决策者拍板</div>
-                              <div className="text-sm text-blue-700">CEO最终决定，避免无尽讨论</div>
+                              <div className="font-semibold text-blue-900">{t('intro.process.stage1.decisionMaker')}</div>
+                              <div className="text-sm text-blue-700">{t('intro.process.stage1.decisionDesc')}</div>
                             </div>
                           </div>
                         </div>
@@ -427,8 +423,8 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                           <span className="text-2xl font-bold">2</span>
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold">差异化阶段 (Differentiation)</h3>
-                          <p className="text-purple-100">找到产品的独特定位和竞争优势</p>
+                          <h3 className="text-2xl font-bold">{t('intro.process.stage2.title')}</h3>
+                          <p className="text-purple-100">{t('intro.process.stage2.subtitle')}</p>
                         </div>
                       </div>
                     </div>
@@ -437,24 +433,24 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                         <div>
                           <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <BarChart3 className="w-5 h-5" />
-                            2x2 分析矩阵
+                            {t('intro.process.stage2.matrix')}
                           </h4>
                           <div className="bg-purple-50 p-4 rounded-lg mb-4">
                             <div className="text-center font-semibold text-purple-900 mb-2">
-                              目标：独占右上角"胜利象限"
+                              {t('intro.process.stage2.matrixGoal')}
                             </div>
                             <div className="grid grid-cols-2 gap-2 text-xs">
                               <div className="bg-red-100 text-red-800 p-2 rounded text-center">
-                                失败者村
+                                {t('intro.process.stage2.loserVillage')}
                               </div>
                               <div className="bg-green-100 text-green-800 p-2 rounded text-center font-bold">
-                                胜利象限
+                                {t('intro.process.stage2.winningQuadrant')}
                               </div>
                               <div className="bg-red-100 text-red-800 p-2 rounded text-center">
-                                失败者村
+                                {t('intro.process.stage2.loserVillage')}
                               </div>
                               <div className="bg-red-100 text-red-800 p-2 rounded text-center">
-                                失败者村
+                                {t('intro.process.stage2.loserVillage')}
                               </div>
                             </div>
                           </div>
@@ -462,24 +458,24 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                         <div>
                           <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <Sparkles className="w-5 h-5" />
-                            输出成果
+                            {t('intro.process.stage2.outputs')}
                           </h4>
                           <ul className="space-y-2">
                             <li className="flex items-start gap-2">
                               <CheckCircle className="w-4 h-4 mt-1 text-green-600" />
-                              <span>差异化优势矩阵</span>
+                              <span>{t('intro.process.stage2.differentiationMatrix')}</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <CheckCircle className="w-4 h-4 mt-1 text-green-600" />
-                              <span>产品"北极星"指导原则</span>
+                              <span>{t('intro.process.stage2.northStar')}</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <CheckCircle className="w-4 h-4 mt-1 text-green-600" />
-                              <span>迷你宣言和项目原则</span>
+                              <span>{t('intro.process.stage2.miniManifesto')}</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <CheckCircle className="w-4 h-4 mt-1 text-green-600" />
-                              <span>清晰的市场定位</span>
+                              <span>{t('intro.process.stage2.marketPosition')}</span>
                             </li>
                           </ul>
                         </div>
@@ -499,8 +495,8 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                           <span className="text-2xl font-bold">3</span>
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold">方法阶段 (Approach)</h3>
-                          <p className="text-green-100">确定具体的执行路径和验证方案</p>
+                          <h3 className="text-2xl font-bold">{t('intro.process.stage3.title')}</h3>
+                          <p className="text-green-100">{t('intro.process.stage3.subtitle')}</p>
                         </div>
                       </div>
                     </div>
@@ -509,15 +505,15 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                         <div>
                           <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <Search className="w-5 h-5" />
-                            Magic Lenses 评估
+                            {t('intro.process.stage3.magicLenses')}
                           </h4>
                           <div className="space-y-2">
                             {[
-                              { name: "客户视角", desc: "对用户最友好" },
-                              { name: "务实视角", desc: "开发最高效" },
-                              { name: "增长视角", desc: "获客最容易" },
-                              { name: "财务视角", desc: "商业价值最大" },
-                              { name: "差异化视角", desc: "最体现优势" }
+                              { name: t('intro.process.stage3.customerPerspective'), desc: t('intro.process.stage3.customerDesc') },
+                              { name: t('intro.process.stage3.pragmaticPerspective'), desc: t('intro.process.stage3.pragmaticDesc') },
+                              { name: t('intro.process.stage3.growthPerspective'), desc: t('intro.process.stage3.growthDesc') },
+                              { name: t('intro.process.stage3.financialPerspective'), desc: t('intro.process.stage3.financialDesc') },
+                              { name: t('intro.process.stage3.differentiationPerspective'), desc: t('intro.process.stage3.differentiationDesc') }
                             ].map((lens, i) => (
                               <div key={i} className="bg-green-50 p-2 rounded-lg">
                                 <div className="font-medium text-green-900">{lens.name}</div>
@@ -529,17 +525,15 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                         <div>
                           <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <Rocket className="w-5 h-5" />
-                            最终产出
+                            {t('intro.process.stage3.finalOutput')}
                           </h4>
                           <div className="bg-green-50 p-4 rounded-lg">
-                            <h5 className="font-bold text-green-900 mb-2">创始假设 (Founding Hypothesis)</h5>
+                            <h5 className="font-bold text-green-900 mb-2">{t('intro.process.stage3.foundingHypothesis')}</h5>
                             <div className="text-sm text-green-800 italic">
-                              "如果我们用 [某个方法] 为 [某类客户] 解决 [某个问题]，
-                              我们相信，他们会因为 [差异化因素] 而选择我们，
-                              而不是 [竞争对手]。"
+                              "{t('intro.process.stage3.hypothesisTemplate')}"
                             </div>
                             <div className="mt-3 text-xs text-green-600">
-                              ✅ 接下来通过 Design Sprint 验证这个假设
+                              ✅ {t('intro.process.stage3.nextStep')}
                             </div>
                           </div>
                         </div>
@@ -555,10 +549,10 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
               <div className="space-y-8">
                 <div className="text-center">
                   <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                    AI 时代，为什么更需要 Foundation Sprint？
+                    {t('intro.aiEra.title')}
                   </h2>
                   <p className="text-lg text-gray-600">
-                    在AI工具让开发变得容易的今天，战略思考变得更加重要
+                    {t('intro.aiEra.description')}
                   </p>
                 </div>
 
@@ -567,30 +561,27 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                     <CardHeader>
                       <CardTitle className="text-red-900 flex items-center gap-3">
                         <Zap className="w-6 h-6" />
-                        AI时代的陷阱
+                        {t('intro.aiEra.aiTraps')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
                         <div className="border-l-4 border-red-500 pl-4">
-                          <h4 className="font-semibold text-red-900">速度陷阱</h4>
+                          <h4 className="font-semibold text-red-900">{t('intro.aiEra.speedTrap')}</h4>
                           <p className="text-red-700 text-sm">
-                            AI让开发变快，但也容易让人陷入"快即是好"的误区，
-                            忽略了方向的正确性
+                            {t('intro.aiEra.speedDesc')}
                           </p>
                         </div>
                         <div className="border-l-4 border-red-500 pl-4">
-                          <h4 className="font-semibold text-red-900">平庸化风险</h4>
+                          <h4 className="font-semibold text-red-900">{t('intro.aiEra.mediocrity')}</h4>
                           <p className="text-red-700 text-sm">
-                            LLM基于相同数据训练，容易产生千篇一律的解决方案，
-                            缺乏独特性
+                            {t('intro.aiEra.mediocrityDesc')}
                           </p>
                         </div>
                         <div className="border-l-4 border-red-500 pl-4">
-                          <h4 className="font-semibold text-red-900">数据盲区</h4>
+                          <h4 className="font-semibold text-red-900">{t('intro.aiEra.dataBlindness')}</h4>
                           <p className="text-red-700 text-sm">
-                            只能获得使用产品用户的数据，无法知道为什么更多人
-                            看了一眼就离开
+                            {t('intro.aiEra.dataDesc')}
                           </p>
                         </div>
                       </div>
@@ -601,30 +592,27 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                     <CardHeader>
                       <CardTitle className="text-green-900 flex items-center gap-3">
                         <Shield className="w-6 h-6" />
-                        Foundation Sprint的价值
+                        {t('intro.aiEra.fsValue')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
                         <div className="border-l-4 border-green-500 pl-4">
-                          <h4 className="font-semibold text-green-900">战略先行</h4>
+                          <h4 className="font-semibold text-green-900">{t('intro.aiEra.strategyFirst')}</h4>
                           <p className="text-green-700 text-sm">
-                            强制在开发之前完成最难的战略思考，
-                            确保正确的方向再加速
+                            {t('intro.aiEra.strategyDesc')}
                           </p>
                         </div>
                         <div className="border-l-4 border-green-500 pl-4">
-                          <h4 className="font-semibold text-green-900">差异化保障</h4>
+                          <h4 className="font-semibold text-green-900">{t('intro.aiEra.differentiationGuarantee')}</h4>
                           <p className="text-green-700 text-sm">
-                            通过结构化流程找到独特定位，
-                            避免AI生成的平庸方案
+                            {t('intro.aiEra.differentiationGuaranteeDesc')}
                           </p>
                         </div>
                         <div className="border-l-4 border-green-500 pl-4">
-                          <h4 className="font-semibold text-green-900">验证机制</h4>
+                          <h4 className="font-semibold text-green-900">{t('intro.aiEra.validationMechanism')}</h4>
                           <p className="text-green-700 text-sm">
-                            形成明确假设后再开发，
-                            通过Design Sprint系统验证
+                            {t('intro.aiEra.validationDesc')}
                           </p>
                         </div>
                       </div>
@@ -637,11 +625,10 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                     <div className="text-center">
                       <Quote className="w-12 h-12 text-blue-600 mx-auto mb-4" />
                       <blockquote className="text-xl text-blue-900 font-medium mb-4">
-                        "可以把开发原型的工作'外包'给AI，但永远不能把战略思考也'外包'出去。
-                        完成了思考这一步，才能真正全速前进。"
+                        "{t('intro.aiEra.quote')}"
                       </blockquote>
                       <div className="text-blue-600">
-                        — Bob Baxley, Apple & Yahoo产品专家
+                        {t('intro.aiEra.quoteSource')}
                       </div>
                     </div>
                   </CardContent>
@@ -650,12 +637,10 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                 <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
                   <h3 className="text-xl font-bold text-yellow-900 mb-4 flex items-center gap-3">
                     <Lightbulb className="w-6 h-6" />
-                    关键洞察
+                    {t('intro.aiEra.keyInsight')}
                   </h3>
                   <p className="text-yellow-800 text-lg leading-relaxed">
-                    在AI时代，<span className="font-bold">先慢下来，才能真的快起来</span>。
-                    Foundation Sprint正是这样一个强制先思考的机制，
-                    让你在正确的方向上享受AI带来的速度优势。
+                    {t('intro.aiEra.keyInsightDesc')}
                   </p>
                 </div>
               </div>
@@ -666,36 +651,36 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
               <div className="space-y-8">
                 <div className="text-center">
                   <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                    预期成果与价值
+                    {t('intro.results.title')}
                   </h2>
                   <p className="text-lg text-gray-600">
-                    一次完整的Foundation Sprint能为您的团队带来什么？
+                    {t('intro.results.description')}
                   </p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
-                    <h3 className="text-2xl font-bold text-blue-600 mb-6">直接产出</h3>
+                    <h3 className="text-2xl font-bold text-blue-600 mb-6">{t('intro.results.directOutputs')}</h3>
                     <div className="space-y-4">
                       {[
                         {
-                          title: "基础信息表",
-                          desc: "客户画像、问题定义、竞争分析、团队优势的完整梳理",
+                          title: t('intro.results.basicInfo'),
+                          desc: t('intro.results.basicInfoDesc'),
                           icon: "📋"
                         },
                         {
-                          title: "差异化矩阵",
-                          desc: "2x2分析图表，明确产品的独特定位和竞争优势",
+                          title: t('intro.results.differentiationMatrix'),
+                          desc: t('intro.results.differentiationMatrixDesc'),
                           icon: "📊"
                         },
                         {
-                          title: "项目原则",
-                          desc: "3-5条核心原则，指导后续所有产品决策",
+                          title: t('intro.results.projectPrinciples'),
+                          desc: t('intro.results.projectPrinciplesDesc'),
                           icon: "📜"
                         },
                         {
-                          title: "创始假设",
-                          desc: "结构化的核心假设，为Design Sprint验证做准备",
+                          title: t('intro.results.foundingHypothesis'),
+                          desc: t('intro.results.foundingHypothesisDesc'),
                           icon: "🎯"
                         }
                       ].map((item, i) => (
@@ -715,27 +700,27 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                   </div>
 
                   <div>
-                    <h3 className="text-2xl font-bold text-green-600 mb-6">深层价值</h3>
+                    <h3 className="text-2xl font-bold text-green-600 mb-6">{t('intro.results.deepValue')}</h3>
                     <div className="space-y-4">
                       {[
                         {
-                          title: "团队共识",
-                          desc: "所有核心成员对战略方向达成一致，消除分歧",
+                          title: t('intro.results.teamConsensus'),
+                          desc: t('intro.results.teamConsensusDesc'),
                           icon: "🤝"
                         },
                         {
-                          title: "决策信心",
-                          desc: "基于科学流程的决策，增强团队执行信心",
+                          title: t('intro.results.decisionConfidence'),
+                          desc: t('intro.results.decisionConfidenceDesc'),
                           icon: "💪"
                         },
                         {
-                          title: "时间效率",
-                          desc: "10小时完成数月工作，大幅提升决策效率",
+                          title: t('intro.results.timeEfficiency'),
+                          desc: t('intro.results.timeEfficiencyDesc'),
                           icon: "⚡"
                         },
                         {
-                          title: "风险控制",
-                          desc: "在大量投入前验证核心假设，降低失败风险",
+                          title: t('intro.results.riskControl'),
+                          desc: t('intro.results.riskControlDesc'),
                           icon: "🛡️"
                         }
                       ].map((item, i) => (
@@ -759,32 +744,31 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                   <CardContent className="pt-6">
                     <div className="text-center">
                       <h3 className="text-2xl font-bold text-purple-900 mb-4">
-                        真实案例：Latchet公司的成功实践
+                        {t('intro.results.caseStudy')}
                       </h3>
                       <div className="max-w-3xl mx-auto text-left">
                         <div className="grid md:grid-cols-3 gap-4 mb-6">
                           <div className="text-center">
-                            <div className="text-3xl font-bold text-red-600">第1周</div>
-                            <div className="text-sm text-red-700">计分卡全红</div>
-                            <div className="text-xs text-gray-600">方案完全不被认可</div>
+                            <div className="text-3xl font-bold text-red-600">{t('intro.results.week1')}</div>
+                            <div className="text-sm text-red-700">{t('intro.results.week1Result')}</div>
+                            <div className="text-xs text-gray-600">{t('intro.results.week1Desc')}</div>
                           </div>
                           <div className="text-center">
-                            <div className="text-3xl font-bold text-yellow-600">第2周</div>
-                            <div className="text-sm text-yellow-700">开始出现黄色</div>
-                            <div className="text-xs text-gray-600">差异化方向变清晰</div>
+                            <div className="text-3xl font-bold text-yellow-600">{t('intro.results.week2')}</div>
+                            <div className="text-sm text-yellow-700">{t('intro.results.week2Result')}</div>
+                            <div className="text-xs text-gray-600">{t('intro.results.week2Desc')}</div>
                           </div>
                           <div className="text-center">
-                            <div className="text-3xl font-bold text-green-600">第3周</div>
-                            <div className="text-sm text-green-700">奇迹般全绿</div>
-                            <div className="text-xs text-gray-600">强烈共鸣的产品方向</div>
+                            <div className="text-3xl font-bold text-green-600">{t('intro.results.week3')}</div>
+                            <div className="text-sm text-green-700">{t('intro.results.week3Result')}</div>
+                            <div className="text-xs text-gray-600">{t('intro.results.week3Desc')}</div>
                           </div>
                         </div>
                         <div className="bg-purple-100 p-4 rounded-lg">
                           <p className="text-purple-800 italic text-center">
-                            "这个流程将我们原本需要3-4个月才能完成的工作，
-                            压缩在了短短三周之内。"
+                            {t('intro.results.caseQuote')}
                             <br />
-                            <span className="text-sm">— Latchet创始人</span>
+                            <span className="text-sm">{t('intro.results.caseSource')}</span>
                           </p>
                         </div>
                       </div>
@@ -793,17 +777,17 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                 </Card>
 
                 <div className="text-center">
-                  <Button 
-                    onClick={onGetStarted}
-                    size="lg" 
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg"
-                  >
-                    <Rocket className="w-5 h-5 mr-2" />
-                    立即开始 Foundation Sprint
-                  </Button>
-                  <p className="text-sm text-gray-500 mt-2">
-                    10小时找到产品基础，科学验证创业想法
-                  </p>
+                                        <Button
+                        onClick={onGetStarted}
+                        size="lg" 
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg"
+                      >
+                        <Rocket className="w-5 h-5 mr-2" />
+                        {t('intro.getStarted')}
+                      </Button>
+                      <p className="text-sm text-gray-500 mt-2">
+                        {t('intro.results.finalDesc')}
+                      </p>
                 </div>
               </div>
             )}
@@ -815,7 +799,7 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                 onClick={() => setCurrentSection(Math.max(0, currentSection - 1))}
                 disabled={currentSection === 0}
               >
-                上一节
+                {t('intro.nav.previous')}
               </Button>
               
               <div className="flex gap-2">
@@ -835,7 +819,7 @@ export const FoundationSprintIntro: React.FC<FoundationSprintIntroProps> = ({
                 onClick={() => setCurrentSection(Math.min(sections.length - 1, currentSection + 1))}
                 disabled={currentSection === sections.length - 1}
               >
-                下一节
+                {t('intro.nav.next')}
               </Button>
             </div>
           </div>

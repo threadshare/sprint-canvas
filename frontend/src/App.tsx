@@ -6,6 +6,7 @@ import { DifferentiationStage } from '@/components/workflows/DifferentiationStag
 import { ApproachStage } from '@/components/workflows/ApproachStage'
 import { ExportButton } from '@/components/export/ExportButton'
 import { AgentsPanel } from '@/components/AgentsPanel'
+import { FoundationSprintIntro } from '@/components/FoundationSprintIntro'
 import { Toaster } from '@/components/ui/toaster'
 import { apiClient } from '@/lib/api/client'
 import { webSocketService } from '@/lib/websocket'
@@ -131,6 +132,9 @@ function App() {
   const [showAIPanel, setShowAIPanel] = useState(false)
   const [selectedAgent, setSelectedAgent] = useState<'think' | 'critique' | 'research' | null>(null)
   const [initialMessage, setInitialMessage] = useState<string>('')
+  
+  // Foundation Sprint Intro state
+  const [showIntro, setShowIntro] = useState(false)
 
   // AI面板处理函数
   const handleOpenAIPanel = (agentType: 'think' | 'critique' | 'research', initialMsg?: string) => {
@@ -479,6 +483,19 @@ function App() {
 
   const foundationData = convertToFrontendFoundationData(currentRoom.foundation)
 
+  // Show intro modal if requested
+  if (showIntro) {
+    return (
+      <>
+        <FoundationSprintIntro
+          onGetStarted={() => setShowIntro(false)}
+          onClose={() => setShowIntro(false)}
+        />
+        <Toaster />
+      </>
+    );
+  }
+
   return (
     <>
       <div className={`min-h-screen overflow-x-hidden gradient-foundation transition-all duration-300 ${showAIPanel ? 'mr-96' : ''}`}>
@@ -489,6 +506,7 @@ function App() {
           isConnected={isConnected}
           participants={participants}
           onLeaveRoom={handleLeaveRoom}
+          onShowIntro={() => setShowIntro(true)}
         />
 
         {/* AI Assistant Button - Fixed Position */}

@@ -18,7 +18,6 @@ export const translations = {
       success: '成功',
       close: '关闭',
       vote: '投票',
-      delete: '删除',
       clickToEdit: '点击编辑...',
     },
     
@@ -59,6 +58,14 @@ export const translations = {
       copyDesc: '发送给团队成员快速加入',
       copyFailed: '复制失败',
       copyManual: '请手动复制邀请链接',
+      learnFoundationSprint: '了解Foundation Sprint',
+      whatIsFoundationSprint: '什么是 Foundation Sprint？',
+      detailedLearn: '详细了解',
+      fsFeature1: '10小时完成传统数月的战略讨论',
+      fsFeature2: '科学的结构化决策流程',
+      fsFeature3: '三大阶段：基础-差异化-方法',
+      fsFeature4: '来自Google Ventures的验证方法',
+      estimatedTimeDetailed: '预计用时：10小时 (可分2天完成)',
     },
     
     // Stages
@@ -181,7 +188,6 @@ export const translations = {
       highestScore: '评分最高',
       selected: '已选择',
       reasoningTitle: '选择理由',
-      reasoningPlaceholder: '说明为什么选择这个路径。哪个Magic Lens的评估最重要？为什么？',
       completeFoundationSprint: '完成 Foundation Sprint',
       lensCustomer: '客户专家',
       lensCustomerDesc: '从客户角度看，哪个方案对他们最友好，最能解决问题？',
@@ -316,6 +322,223 @@ export const translations = {
       hypothesis: '创始假设',
     },
 
+    // Foundation Sprint Introduction
+    intro: {
+      title: 'Foundation Sprint 方法指南',
+      subtitle: '来自Google Ventures的科学创新方法',
+      learnMore: '了解Foundation Sprint',
+      getStarted: '立即开始 Foundation Sprint',
+      close: '关闭',
+      
+      // Navigation
+      nav: {
+        hero: '什么是Foundation Sprint',
+        problem: '解决的问题',
+        science: '科学原理',
+        process: '三大阶段',
+        aiEra: 'AI时代的价值',
+        results: '预期成果'
+      },
+      
+      // Hero Section
+      hero: {
+        fromGoogle: '来自Google Ventures',
+        whatIs: '什么是 Foundation Sprint？',
+        description: '一个仅需 10小时，就能完成传统模式下 数月工作 的科学方法论',
+        coreIdea: '核心理念',
+        coreQuote: '让项目最核心的成员清空所有日程安排，完全投入进来，通过结构化流程在最早阶段奠定坚实的战略基础。',
+        coreSource: '— Jake Knapp & John Zeratsky, Google Ventures',
+        verifiedResults: '验证成果',
+        verifiedDesc: '数百家创业公司成功实践',
+        efficientDecision: '高效决策',
+        efficientDesc: '10小时 vs 传统数月讨论',
+        scientificVerification: '科学验证',
+        scientificDesc: '结构化流程确保客观决策'
+      },
+      
+      // Problem Section
+      problem: {
+        whyNeed: '为什么需要 Foundation Sprint？',
+        description: '解决创业团队最根本的战略分歧问题',
+        traditionalProblems: '传统模式的问题',
+        endlessDiscussion: '反复纠结',
+        endlessDesc: '在最根本的问题上无休止讨论',
+        lackConsensus: '缺乏共识',
+        lackDesc: '客户是谁？解决什么问题？',
+        wasteTime: '浪费时间',
+        wasteDesc: '数月时间仍无法达成战略共识',
+        blindDevelopment: '盲目开发',
+        blindDesc: '没有验证假设就开始大量投入',
+        
+        fsolutions: 'Foundation Sprint的解决方案',
+        focusedDecision: '聚焦决策',
+        focusedDesc: '强制团队专注于最关键的战略问题',
+        structuredProcess: '结构化流程',
+        structuredDesc: 'Note and Vote机制确保科学决策',
+        rapidConsensus: '快速共识',
+        rapidDesc: '10小时内达成所有核心战略共识',
+        hypothesisValidation: '假设验证',
+        hypothesisDesc: '形成明确假设，后续Design Sprint验证'
+      },
+      
+      // Science Section
+      science: {
+        title: '科学原理：为什么如此有效？',
+        description: '基于认知科学和群体决策理论的方法设计',
+        cognitiveScience: '认知科学基础',
+        independentThinking: '独立思考避免群体偏见',
+        timeLimit: '时间限制提升专注度',
+        structuredReduction: '结构化减少认知负担',
+        groupDecision: '群体决策理论',
+        noteVote: 'Note and Vote机制',
+        avoidAuthority: '避免权威影响决策',
+        multiPerspective: '多元观点整合',
+        empiricalValidation: '实证验证',
+        hundredsSuccess: '数百家公司成功案例',
+        googleValidation: 'Google Ventures验证',
+        characterPractice: 'Character Capital实践',
+        timeComparison: '10小时 vs 数月',
+        timeDesc: '通过结构化流程，将传统需要数月的战略讨论压缩到10小时',
+        traditionalMode: '传统模式',
+        traditionalTime: '3-6个月',
+        foundationTime: '10小时'
+      },
+      
+      // Process Section
+      process: {
+        title: '三大核心阶段',
+        description: '环环相扣的结构化流程，确保每个环节都有科学依据',
+        
+        stage1: {
+          title: '基础阶段 (Foundation)',
+          subtitle: '回答看似简单却至关重要的基础问题',
+          duration: '3-4小时',
+          coreQuestions: '核心问题',
+          whoCustomers: '你的客户是谁？',
+          whatProblems: '你为他们解决什么问题？',
+          competitive: '市场上的竞争格局如何？',
+          advantages: '你的团队有哪些独特优势？',
+          methodFeatures: '方法特色',
+          noteVoteTitle: 'Note and Vote',
+          noteVoteDesc: '独自思考，避免群体偏见',
+          simultaneousDisplay: '同时展示',
+          simultaneousDesc: '所有想法一起展示讨论',
+          decisionMaker: '决策者拍板',
+          decisionDesc: 'CEO最终决定，避免无尽讨论'
+        },
+        
+        stage2: {
+          title: '差异化阶段 (Differentiation)',
+          subtitle: '找到产品的独特定位和竞争优势',
+          duration: '3-4小时',
+          matrix: '2x2 分析矩阵',
+          matrixGoal: '目标：独占右上角"胜利象限"',
+          loserVillage: '失败者村',
+          winningQuadrant: '胜利象限',
+          outputs: '输出成果',
+          differentiationMatrix: '差异化优势矩阵',
+          northStar: '产品"北极星"指导原则',
+          miniManifesto: '迷你宣言和项目原则',
+          marketPosition: '清晰的市场定位'
+        },
+        
+        stage3: {
+          title: '方法阶段 (Approach)',
+          subtitle: '确定具体的执行路径和验证方案',
+          duration: '3-4小时',
+          magicLenses: 'Magic Lenses 评估',
+          customerPerspective: '客户视角',
+          customerDesc: '对用户最友好',
+          pragmaticPerspective: '务实视角',
+          pragmaticDesc: '开发最高效',
+          growthPerspective: '增长视角',
+          growthDesc: '获客最容易',
+          financialPerspective: '财务视角',
+          financialDesc: '商业价值最大',
+          differentiationPerspective: '差异化视角',
+          differentiationDesc: '最体现优势',
+          finalOutput: '最终产出',
+          foundingHypothesis: '创始假设 (Founding Hypothesis)',
+          hypothesisTemplate: '"如果我们用 [某个方法] 为 [某类客户] 解决 [某个问题]，我们相信，他们会因为 [差异化因素] 而选择我们，而不是 [竞争对手]。"',
+          nextStep: '接下来通过 Design Sprint 验证这个假设'
+        }
+      },
+      
+      // AI Era Section
+      aiEra: {
+        title: 'AI 时代，为什么更需要 Foundation Sprint？',
+        description: '在AI工具让开发变得容易的今天，战略思考变得更加重要',
+        aiTraps: 'AI时代的陷阱',
+        speedTrap: '速度陷阱',
+        speedDesc: 'AI让开发变快，但也容易让人陷入"快即是好"的误区，忽略了方向的正确性',
+        mediocrity: '平庸化风险',
+        mediocrityDesc: 'LLM基于相同数据训练，容易产生千篇一律的解决方案，缺乏独特性',
+        dataBlindness: '数据盲区',
+        dataDesc: '只能获得使用产品用户的数据，无法知道为什么更多人看了一眼就离开',
+        
+        fsValue: 'Foundation Sprint的价值',
+        strategyFirst: '战略先行',
+        strategyDesc: '强制在开发之前完成最难的战略思考，确保正确的方向再加速',
+        differentiationGuarantee: '差异化保障',
+        differentiationGuaranteeDesc: '通过结构化流程找到独特定位，避免AI生成的平庸方案',
+        validationMechanism: '验证机制',
+        validationDesc: '形成明确假设后再开发，通过Design Sprint系统验证',
+        
+        keyInsight: '关键洞察',
+        keyInsightDesc: '在AI时代，先慢下来，才能真的快起来。Foundation Sprint正是这样一个强制先思考的机制，让你在正确的方向上享受AI带来的速度优势。',
+        
+        quote: '"可以把开发原型的工作\'外包\'给AI，但永远不能把战略思考也\'外包\'出去。完成了思考这一步，才能真正全速前进。"',
+        quoteSource: '— Bob Baxley, Apple & Yahoo产品专家'
+      },
+      
+      // Results Section
+      results: {
+        title: '预期成果与价值',
+        description: '一次完整的Foundation Sprint能为您的团队带来什么？',
+        directOutputs: '直接产出',
+        basicInfo: '基础信息表',
+        basicInfoDesc: '客户画像、问题定义、竞争分析、团队优势的完整梳理',
+        differentiationMatrix: '差异化矩阵',
+        differentiationMatrixDesc: '2x2分析图表，明确产品的独特定位和竞争优势',
+        projectPrinciples: '项目原则',
+        projectPrinciplesDesc: '3-5条核心原则，指导后续所有产品决策',
+        foundingHypothesis: '创始假设',
+        foundingHypothesisDesc: '结构化的核心假设，为Design Sprint验证做准备',
+        
+        deepValue: '深层价值',
+        teamConsensus: '团队共识',
+        teamConsensusDesc: '所有核心成员对战略方向达成一致，消除分歧',
+        decisionConfidence: '决策信心',
+        decisionConfidenceDesc: '基于科学流程的决策，增强团队执行信心',
+        timeEfficiency: '时间效率',
+        timeEfficiencyDesc: '10小时完成数月工作，大幅提升决策效率',
+        riskControl: '风险控制',
+        riskControlDesc: '在大量投入前验证核心假设，降低失败风险',
+        
+        caseStudy: '真实案例：Latchet公司的成功实践',
+        week1: '第1周',
+        week1Result: '计分卡全红',
+        week1Desc: '方案完全不被认可',
+        week2: '第2周',
+        week2Result: '开始出现黄色',
+        week2Desc: '差异化方向变清晰',
+        week3: '第3周',
+        week3Result: '奇迹般全绿',
+        week3Desc: '强烈共鸣的产品方向',
+        caseQuote: '"这个流程将我们原本需要3-4个月才能完成的工作，压缩在了短短三周之内。"',
+        caseSource: '— Latchet创始人',
+        
+        finalCta: '立即开始 Foundation Sprint',
+        finalDesc: '10小时找到产品基础，科学验证创业想法'
+      },
+
+      // Navigation
+      nav: {
+        previous: '上一节',
+        next: '下一节'
+      }
+    },
+
   },
   
   en: {
@@ -335,7 +558,6 @@ export const translations = {
       success: 'Success',
       close: 'Close',
       vote: 'Vote',
-      delete: 'Delete',
       clickToEdit: 'Click to edit...',
     },
     
@@ -376,6 +598,14 @@ export const translations = {
       copyDesc: 'Send to team members for quick access',
       copyFailed: 'Copy failed',
       copyManual: 'Please copy the invite link manually',
+      learnFoundationSprint: 'Learn Foundation Sprint',
+      whatIsFoundationSprint: 'What is Foundation Sprint?',
+      detailedLearn: 'Learn More',
+      fsFeature1: 'Complete months of strategic discussion in 10 hours',
+      fsFeature2: 'Scientific structured decision-making process',
+      fsFeature3: 'Three stages: Foundation-Differentiation-Approach',
+      fsFeature4: 'Validated methodology from Google Ventures',
+      estimatedTimeDetailed: 'Estimated time: 10 hours (can be completed in 2 days)',
     },
     
     // Stages
@@ -498,7 +728,6 @@ export const translations = {
       highestScore: 'Highest Score',
       selected: 'Selected',
       reasoningTitle: 'Selection Reasoning',
-      reasoningPlaceholder: 'Explain why you chose this path. Which Magic Lens evaluation is most important? Why?',
       completeFoundationSprint: 'Complete Foundation Sprint',
       lensCustomer: 'Customer Expert',
       lensCustomerDesc: 'From the customer perspective, which solution is most friendly to them and best solves the problem?',
@@ -631,6 +860,223 @@ export const translations = {
       generating: 'Generating...',
       foundationReport: 'Foundation Sprint Report',
       hypothesis: 'Founding Hypothesis',
+    },
+
+    // Foundation Sprint Introduction
+    intro: {
+      title: 'Foundation Sprint Method Guide',
+      subtitle: 'Scientific Innovation Method from Google Ventures',
+      learnMore: 'Learn Foundation Sprint',
+      getStarted: 'Start Foundation Sprint Now',
+      close: 'Close',
+      
+      // Navigation
+      nav: {
+        hero: 'What is Foundation Sprint',
+        problem: 'Problems Solved',
+        science: 'Scientific Principles',
+        process: 'Three Stages',
+        aiEra: 'Value in AI Era',
+        results: 'Expected Results'
+      },
+      
+      // Hero Section
+      hero: {
+        fromGoogle: 'From Google Ventures',
+        whatIs: 'What is Foundation Sprint?',
+        description: 'A scientific methodology that completes months of traditional work in just 10 hours',
+        coreIdea: 'Core Philosophy',
+        coreQuote: 'Get the core team members to clear their schedules completely and fully commit, establishing a solid strategic foundation at the earliest stage through a structured process.',
+        coreSource: '— Jake Knapp & John Zeratsky, Google Ventures',
+        verifiedResults: 'Proven Results',
+        verifiedDesc: 'Successfully practiced by hundreds of startups',
+        efficientDecision: 'Efficient Decision-making',
+        efficientDesc: '10 hours vs months of traditional discussion',
+        scientificVerification: 'Scientific Validation',
+        scientificDesc: 'Structured process ensures objective decisions'
+      },
+      
+      // Problem Section
+      problem: {
+        whyNeed: 'Why Foundation Sprint?',
+        description: 'Solve fundamental strategic disagreements in startup teams',
+        traditionalProblems: 'Problems with Traditional Methods',
+        endlessDiscussion: 'Endless Debates',
+        endlessDesc: 'Endless discussions on fundamental issues',
+        lackConsensus: 'Lack of Consensus',
+        lackDesc: 'Who are the customers? What problems to solve?',
+        wasteTime: 'Time Waste',
+        wasteDesc: 'Months without strategic consensus',
+        blindDevelopment: 'Blind Development',
+        blindDesc: 'Heavy investment without validating assumptions',
+        
+        fsolutions: 'Foundation Sprint Solutions',
+        focusedDecision: 'Focused Decision-making',
+        focusedDesc: 'Force teams to focus on critical strategic issues',
+        structuredProcess: 'Structured Process',
+        structuredDesc: 'Note and Vote mechanism ensures scientific decisions',
+        rapidConsensus: 'Rapid Consensus',
+        rapidDesc: 'Achieve all core strategic consensus in 10 hours',
+        hypothesisValidation: 'Hypothesis Validation',
+        hypothesisDesc: 'Form clear hypotheses, validate through Design Sprint'
+      },
+      
+      // Science Section
+      science: {
+        title: 'Scientific Principles: Why So Effective?',
+        description: 'Method design based on cognitive science and group decision theory',
+        cognitiveScience: 'Cognitive Science Foundation',
+        independentThinking: 'Independent thinking avoids groupthink',
+        timeLimit: 'Time constraints improve focus',
+        structuredReduction: 'Structure reduces cognitive load',
+        groupDecision: 'Group Decision Theory',
+        noteVote: 'Note and Vote mechanism',
+        avoidAuthority: 'Avoid authority bias in decisions',
+        multiPerspective: 'Multi-perspective integration',
+        empiricalValidation: 'Empirical Validation',
+        hundredsSuccess: 'Hundreds of successful company cases',
+        googleValidation: 'Google Ventures validation',
+        characterPractice: 'Character Capital practice',
+        timeComparison: '10 hours vs months',
+        timeDesc: 'Through structured process, compress months of strategic discussion into 10 hours',
+        traditionalMode: 'Traditional Mode',
+        traditionalTime: '3-6 months',
+        foundationTime: '10 hours'
+      },
+      
+      // Process Section
+      process: {
+        title: 'Three Core Stages',
+        description: 'Interconnected structured process ensuring scientific basis for every step',
+        
+        stage1: {
+          title: 'Foundation Stage',
+          subtitle: 'Answer seemingly simple but crucial fundamental questions',
+          duration: '3-4 hours',
+          coreQuestions: 'Core Questions',
+          whoCustomers: 'Who are your customers?',
+          whatProblems: 'What problems do you solve for them?',
+          competitive: 'What is the competitive landscape?',
+          advantages: 'What unique advantages does your team have?',
+          methodFeatures: 'Method Features',
+          noteVoteTitle: 'Note and Vote',
+          noteVoteDesc: 'Independent thinking, avoid groupthink',
+          simultaneousDisplay: 'Simultaneous Display',
+          simultaneousDesc: 'All ideas displayed and discussed together',
+          decisionMaker: 'Decision Maker',
+          decisionDesc: 'CEO makes final decisions, avoid endless discussion'
+        },
+        
+        stage2: {
+          title: 'Differentiation Stage',
+          subtitle: 'Find unique product positioning and competitive advantages',
+          duration: '3-4 hours',
+          matrix: '2x2 Analysis Matrix',
+          matrixGoal: 'Goal: Monopolize top-right "Winning Quadrant"',
+          loserVillage: "Loser's Village",
+          winningQuadrant: 'Winning Quadrant',
+          outputs: 'Outputs',
+          differentiationMatrix: 'Differentiation advantage matrix',
+          northStar: 'Product "North Star" guiding principles',
+          miniManifesto: 'Mini manifesto and project principles',
+          marketPosition: 'Clear market positioning'
+        },
+        
+        stage3: {
+          title: 'Approach Stage',
+          subtitle: 'Determine specific execution paths and validation plans',
+          duration: '3-4 hours',
+          magicLenses: 'Magic Lenses Assessment',
+          customerPerspective: 'Customer Perspective',
+          customerDesc: 'Most user-friendly',
+          pragmaticPerspective: 'Pragmatic Perspective',
+          pragmaticDesc: 'Most efficient development',
+          growthPerspective: 'Growth Perspective',
+          growthDesc: 'Easiest user acquisition',
+          financialPerspective: 'Financial Perspective',
+          financialDesc: 'Maximum business value',
+          differentiationPerspective: 'Differentiation Perspective',
+          differentiationDesc: 'Best embodies advantages',
+          finalOutput: 'Final Output',
+          foundingHypothesis: 'Founding Hypothesis',
+          hypothesisTemplate: '"If we use [method] to solve [problem] for [customers], we believe they will choose us over [competitors] because of [differentiation factors]."',
+          nextStep: 'Next: validate this hypothesis through Design Sprint'
+        }
+      },
+      
+      // AI Era Section
+      aiEra: {
+        title: 'AI Era: Why Foundation Sprint is More Needed?',
+        description: 'In an era where AI tools make development easy, strategic thinking becomes more important',
+        aiTraps: 'Traps in AI Era',
+        speedTrap: 'Speed Trap',
+        speedDesc: 'AI makes development fast, but easy to fall into "fast is good" fallacy, ignoring direction correctness',
+        mediocrity: 'Mediocrity Risk',
+        mediocrityDesc: 'LLMs trained on same data, easy to produce cookie-cutter solutions lacking uniqueness',
+        dataBlindness: 'Data Blind Spots',
+        dataDesc: 'Can only get data from users who use the product, cannot know why more people left after one glance',
+        
+        fsValue: 'Foundation Sprint Value',
+        strategyFirst: 'Strategy First',
+        strategyDesc: 'Force completion of hardest strategic thinking before development, ensure correct direction before acceleration',
+        differentiationGuarantee: 'Differentiation Guarantee',
+        differentiationGuaranteeDesc: 'Find unique positioning through structured process, avoid AI-generated mediocre solutions',
+        validationMechanism: 'Validation Mechanism',
+        validationDesc: 'Develop after forming clear hypotheses, systematically validate through Design Sprint',
+        
+        keyInsight: 'Key Insight',
+        keyInsightDesc: 'In the AI era, slow down first to truly speed up. Foundation Sprint is exactly such a mechanism that forces thinking first, letting you enjoy AI speed advantages in the right direction.',
+        
+        quote: '"You can \'outsource\' prototype development to AI, but never \'outsource\' strategic thinking. Only after completing this thinking step can you truly move at full speed."',
+        quoteSource: '— Bob Baxley, Apple & Yahoo Product Expert'
+      },
+      
+      // Results Section
+      results: {
+        title: 'Expected Results and Value',
+        description: 'What can a complete Foundation Sprint bring to your team?',
+        directOutputs: 'Direct Outputs',
+        basicInfo: 'Basic Information Sheet',
+        basicInfoDesc: 'Complete organization of customer profiles, problem definitions, competitive analysis, team advantages',
+        differentiationMatrix: 'Differentiation Matrix',
+        differentiationMatrixDesc: '2x2 analysis chart, clarify unique product positioning and competitive advantages',
+        projectPrinciples: 'Project Principles',
+        projectPrinciplesDesc: '3-5 core principles guiding all subsequent product decisions',
+        foundingHypothesis: 'Founding Hypothesis',
+        foundingHypothesisDesc: 'Structured core hypothesis, preparing for Design Sprint validation',
+        
+        deepValue: 'Deep Value',
+        teamConsensus: 'Team Consensus',
+        teamConsensusDesc: 'All core members align on strategic direction, eliminate disagreements',
+        decisionConfidence: 'Decision Confidence',
+        decisionConfidenceDesc: 'Science-based decisions enhance team execution confidence',
+        timeEfficiency: 'Time Efficiency',
+        timeEfficiencyDesc: '10 hours complete months of work, dramatically improve decision efficiency',
+        riskControl: 'Risk Control',
+        riskControlDesc: 'Validate core hypotheses before heavy investment, reduce failure risk',
+        
+        caseStudy: 'Real Case: Latchet Company\'s Successful Practice',
+        week1: 'Week 1',
+        week1Result: 'All red scorecard',
+        week1Desc: 'Solution completely unaccepted',
+        week2: 'Week 2',
+        week2Result: 'Yellow appears',
+        week2Desc: 'Differentiation direction becomes clear',
+        week3: 'Week 3',
+        week3Result: 'Miraculous all green',
+        week3Desc: 'Strong resonance product direction',
+        caseQuote: '"This process compressed what would have taken us 3-4 months into just three weeks."',
+        caseSource: '— Latchet Founders',
+        
+        finalCta: 'Start Foundation Sprint Now',
+        finalDesc: '10 hours to find product foundation, scientifically validate startup ideas'
+      },
+
+      // Navigation
+      nav: {
+        previous: 'Previous',
+        next: 'Next'
+      }
     },
 
   },

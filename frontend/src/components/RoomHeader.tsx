@@ -26,6 +26,7 @@ import {
   WifiOff,
   Clock,
   CheckCircle,
+  HelpCircle,
 } from 'lucide-react';
 import type { Room } from '@/lib/api/types';
 
@@ -36,6 +37,7 @@ interface RoomHeaderProps {
   isConnected: boolean;
   participants?: Array<{ id: string; name: string; online: boolean }>;
   onLeaveRoom: () => void;
+  onShowIntro?: () => void;
 }
 
 export const RoomHeader: React.FC<RoomHeaderProps> = ({
@@ -45,6 +47,7 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
   isConnected,
   participants = [],
   onLeaveRoom,
+  onShowIntro,
 }) => {
   const { t } = useLanguage();
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
@@ -133,6 +136,16 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
                 <h1 className="text-xl font-bold text-foundation">
                   {room.name}
                 </h1>
+                {onShowIntro && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onShowIntro}
+                    className="h-6 w-6 p-0 text-foundation/60 hover:text-foundation"
+                  >
+                    <HelpCircle className="h-4 w-4" />
+                  </Button>
+                )}
                 <Badge className={getStageColor(room.status)}>
                   <StageIcon className="w-3 h-3 mr-1" />
                   {getStageDisplayName(room.status)}
