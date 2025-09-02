@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { EditableCard } from '@/components/cards/EditableCard';
 import { ProblemCard } from '@/components/cards/ProblemCard';
@@ -59,6 +60,7 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
   onNextStage,
   className,
 }) => {
+  const { t } = useLanguage();
   const [activeVote, setActiveVote] = useState<keyof FoundationData | null>(null);
   const [votes, setVotes] = useState<Record<string, any>>({});
 
@@ -179,12 +181,11 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
       {/* 阶段说明 */}
       <Card className="border-blue-200 bg-blue-50">
         <CardHeader>
-          <CardTitle className="text-blue-800">第一阶段：奠定基础</CardTitle>
+          <CardTitle className="text-blue-800">{t('foundation.stageTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-blue-700 text-sm leading-relaxed">
-            在这个阶段，我们将回答一些看似简单却至关重要的问题。每个人先独立思考并写下答案，
-            然后通过投票达成团队共识。这个过程将帮助我们建立统一的"基础信息表"。
+            {t('foundation.stageDesc')}
           </p>
         </CardContent>
       </Card>
@@ -206,9 +207,9 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
             <CardTitle className="flex items-center gap-3">
               <Users className="h-6 w-6" />
               <div className="flex-1">
-                <h3 className="text-lg font-semibold">客户是谁？</h3>
+                <h3 className="text-lg font-semibold">{t('foundation.customers')}</h3>
                 <p className="text-sm text-gray-600 font-normal mt-1">
-                  定义您的目标客户群体
+                  {t('foundation.customersDesc')}
                 </p>
               </div>
             </CardTitle>
@@ -222,7 +223,7 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
                     key={index}
                     id={`customer-${index}`}
                     initialText={customer}
-                    placeholder="描述一个客户类型..."
+                    placeholder={t('foundation.addCustomer')}
                     variant="customer"
                     readOnly={readOnly}
                     onSave={(text) => updateCustomer(index, text)}
@@ -233,7 +234,7 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
                 {!readOnly && (
                   <EditableCard
                     key="new"
-                    placeholder="描述一个客户类型..."
+                    placeholder={t('foundation.addCustomer')}
                     variant="customer"
                     onSave={(text) => addCustomer(text)}
                   />
@@ -243,7 +244,7 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
               {data.customers.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
                   <Users className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                  <p className="text-sm">点击上方卡片添加客户类型</p>
+                  <p className="text-sm">{t('foundation.addCustomerHint')}</p>
                 </div>
               )}
             </div>
@@ -258,9 +259,9 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
             <CardTitle className="flex items-center gap-3">
               <AlertCircle className="h-6 w-6" />
               <div className="flex-1">
-                <h3 className="text-lg font-semibold">解决什么问题？</h3>
+                <h3 className="text-lg font-semibold">{t('foundation.problems')}</h3>
                 <p className="text-sm text-gray-600 font-normal mt-1">
-                  明确要解决的核心问题，包括痛点强度和影响范围
+                  {t('foundation.problemsDesc')}
                 </p>
               </div>
             </CardTitle>
@@ -291,7 +292,7 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
               {data.problems.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
                   <AlertCircle className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                  <p className="text-sm">点击上方卡片添加要解决的问题</p>
+                  <p className="text-sm">{t('foundation.addProblem')}</p>
                 </div>
               )}
             </div>
@@ -306,9 +307,9 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
             <CardTitle className="flex items-center gap-3">
               <Target className="h-6 w-6" />
               <div className="flex-1">
-                <h3 className="text-lg font-semibold">竞争格局如何？</h3>
+                <h3 className="text-lg font-semibold">{t('foundation.competition')}</h3>
                 <p className="text-sm text-gray-600 font-normal mt-1">
-                  分析直接竞争对手、替代品和土办法
+                  {t('foundation.competitionDesc')}
                 </p>
               </div>
             </CardTitle>
@@ -330,7 +331,7 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
                 {!readOnly && (
                   <CompetitionCard
                     key="new"
-                    placeholder="描述一个竞争对手或替代方案..."
+                    placeholder={t('foundation.addCompetitor')}
                     onSave={(competition) => addCompetition(competition)}
                   />
                 )}
@@ -339,7 +340,7 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
               {data.competition.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
                   <Target className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                  <p className="text-sm">点击上方卡片添加竞争分析</p>
+                  <p className="text-sm">{t('foundation.addCompetitorHint')}</p>
                 </div>
               )}
             </div>
@@ -354,9 +355,9 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
             <CardTitle className="flex items-center gap-3">
               <TrendingUp className="h-6 w-6" />
               <div className="flex-1">
-                <h3 className="text-lg font-semibold">我们的优势？</h3>
+                <h3 className="text-lg font-semibold">{t('foundation.advantages')}</h3>
                 <p className="text-sm text-gray-600 font-normal mt-1">
-                  团队的独特能力、洞察、资源或动机
+                  {t('foundation.advantagesDesc')}
                 </p>
               </div>
             </CardTitle>
@@ -378,7 +379,7 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
                 {!readOnly && (
                   <AdvantageCard
                     key="new"
-                    placeholder="描述一个独特优势..."
+                    placeholder={t('foundation.addAdvantage')}
                     onSave={(advantage) => addAdvantage(advantage)}
                   />
                 )}
@@ -387,7 +388,7 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
               {data.advantages.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
                   <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                  <p className="text-sm">点击上方卡片添加团队优势</p>
+                  <p className="text-sm">{t('foundation.addAdvantageHint')}</p>
                 </div>
               )}
             </div>
@@ -401,9 +402,9 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="text-green-800">
-                <h4 className="font-semibold">基础阶段进度</h4>
+                <h4 className="font-semibold">{t('foundation.progress')}</h4>
                 <p className="text-sm text-green-600">
-                  已完成 {Object.values(data).filter(items => items.length > 0).length}/4 个部分
+                  {t('foundation.progressDesc')} {Object.values(data).filter(items => items.length > 0).length}/4 {t('foundation.ofParts')}
                 </p>
               </div>
               
