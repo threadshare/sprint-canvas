@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
+import { FoundationSprintIntro } from '@/components/FoundationSprintIntro';
 import { apiClient } from '@/lib/api/client';
 import type { Room } from '@/lib/api/types';
 import { 
@@ -17,6 +18,8 @@ import {
   Lightbulb,
   AlertCircle,
   Loader2,
+  BookOpen,
+  HelpCircle,
 } from 'lucide-react';
 
 interface RoomEntryProps {
@@ -29,6 +32,7 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined, initialRoomI
   const [activeTab, setActiveTab] = useState<'create' | 'join'>(initialRoomId ? 'join' : 'create');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showIntro, setShowIntro] = useState(false);
   
   // Create room form
   const [createForm, setCreateForm] = useState({
@@ -101,11 +105,34 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined, initialRoomI
     }
   };
 
+  // Show intro modal if requested
+  if (showIntro) {
+    return (
+      <FoundationSprintIntro
+        onGetStarted={() => setShowIntro(false)}
+        onClose={() => setShowIntro(false)}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen gradient-foundation flex items-center justify-center p-4">
       {/* Language Switcher - Fixed Position */}
       <div className="fixed top-4 right-4 z-50">
         <LanguageSwitcher />
+      </div>
+      
+      {/* Info Button - Fixed Position */}
+      <div className="fixed top-4 left-4 z-50">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowIntro(true)}
+          className="bg-white/90 backdrop-blur-sm hover:bg-white"
+        >
+          <HelpCircle className="w-4 h-4 mr-2" />
+          了解Foundation Sprint
+        </Button>
       </div>
       
       <div className="w-full max-w-lg">
@@ -253,16 +280,34 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined, initialRoomI
             <Separator className="my-6" />
 
             <div className="bg-blue-50 rounded-lg p-4">
-              <h3 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
-                <Lightbulb className="h-4 w-4" />
-                {t('room.whatIsFS')}
-              </h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-medium text-blue-900 flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4" />
+                  什么是 Foundation Sprint？
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowIntro(true)}
+                  className="text-blue-700 hover:text-blue-900 hover:bg-blue-100 text-xs"
+                >
+                  <BookOpen className="w-3 h-3 mr-1" />
+                  详细了解
+                </Button>
+              </div>
               <ul className="text-sm text-blue-800 space-y-1">
-                <li>• {t('room.fsDesc1')}</li>
-                <li>• {t('room.fsDesc2')}</li>
-                <li>• {t('room.fsDesc3')}</li>
-                <li>• {t('room.fsDesc4')}</li>
+                <li>• 10小时完成传统数月的战略讨论</li>
+                <li>• 科学的结构化决策流程</li>
+                <li>• 三大阶段：基础-差异化-方法</li>
+                <li>• 来自Google Ventures的验证方法</li>
               </ul>
+              
+              <div className="mt-3 pt-3 border-t border-blue-200">
+                <div className="flex items-center gap-2 text-xs text-blue-600">
+                  <Clock className="w-3 h-3" />
+                  <span>预计用时：10小时 (可分2天完成)</span>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
