@@ -1,0 +1,18 @@
+# 开发环境 Dockerfile - 后端
+FROM --platform=linux/amd64 golang:1.21-alpine
+
+# 安装开发工具
+RUN apk add --no-cache git gcc musl-dev
+RUN go install github.com/cosmtrek/air@latest
+
+WORKDIR /app
+
+# 复制 go.mod 和 go.sum
+COPY go.mod go.sum ./
+RUN go mod download
+
+# 暴露端口
+EXPOSE 8080
+
+# 使用 air 进行热重载
+CMD ["air", "-c", ".air.toml"]

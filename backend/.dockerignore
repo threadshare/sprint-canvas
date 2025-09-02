@@ -1,0 +1,50 @@
+# 二进制文件
+main
+*.exe
+*.dll
+*.so
+*.dylib
+
+# 测试文件
+*_test.go
+*.test
+
+# 依赖和缓存
+vendor/
+.cache/
+
+# 环境配置
+.env
+.env.local
+.env.*.local
+
+# IDE 配置
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# 日志文件
+*.log
+logs/
+
+# 临时文件
+tmp/
+temp/
+
+# 上传文件（开发环境）
+uploads/
+
+# Git
+.git/
+.gitignore
+
+# 文档
+*.md
+docs/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

@@ -1,0 +1,14 @@
+# 开发环境 Dockerfile - 前端
+FROM --platform=linux/amd64 node:20-alpine
+
+WORKDIR /app
+
+# 安装开发依赖
+COPY package*.json ./
+RUN npm install
+
+# 暴露开发服务器端口
+EXPOSE 3000
+
+# 使用开发模式启动
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

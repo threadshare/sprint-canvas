@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    platform: linux/amd64
+    container_name: foundation-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: foundation_sprint
+      POSTGRES_USER: foundation
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-foundation123}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - foundation-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U foundation -d foundation_sprint"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    platform: linux/amd64
+    container_name: foundation-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis123}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - foundation-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+    platform: linux/amd64
+    container_name: foundation-backend
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+      GIN_MODE: ${GIN_MODE:-release}
+      DATABASE_URL: postgresql://foundation:${POSTGRES_PASSWORD:-foundation123}@postgres:5432/foundation_sprint?sslmode=disable
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis123}@redis:6379/0
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - foundation-network
+    volumes:
+      - ./backend/uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 前端服务
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
+    platform: linux/amd64
+    container_name: foundation-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - foundation-network
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 数据库管理工具（可选，开发环境使用）
+  adminer:
+    image: adminer:latest
+    platform: linux/amd64
+    container_name: foundation-adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    networks:
+      - foundation-network
+    depends_on:
+      - postgres
+    profiles:
+      - dev
+
+networks:
+  foundation-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local

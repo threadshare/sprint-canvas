@@ -6,6 +6,7 @@ import { ProblemCard } from '@/components/cards/ProblemCard';
 import { CompetitionCard } from '@/components/cards/CompetitionCard';
 import { AdvantageCard } from '@/components/cards/AdvantageCard';
 import { VoteCard } from '@/components/cards/VoteCard';
+import { AIWorkflowHelper } from '@/components/ai/AIWorkflowHelper';
 import { Plus, Users, AlertCircle, Target, TrendingUp, Vote } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -187,6 +188,16 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
           </p>
         </CardContent>
       </Card>
+
+      {/* AI 工作流助手 */}
+      {roomId && (
+        <AIWorkflowHelper
+          phase="foundation"
+          roomId={roomId}
+          data={data}
+          context={`当前阶段: foundation, 客户: ${data.customers.join(', ')}, 问题: ${data.problems.map(p => p.description).join(', ')}, 竞争: ${data.competition.map(c => c.name).join(', ')}, 优势: ${data.advantages.map(a => a.description).join(', ')}`}
+        />
+      )}
 
       {/* 客户是谁 */}
       <div className="space-y-4">

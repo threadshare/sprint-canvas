@@ -1,0 +1,32 @@
+version: '3.8'
+
+# 开发环境配置覆盖
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app
+      - /app/vendor
+    environment:
+      GIN_MODE: debug
+      CGO_ENABLED: 0
+    command: air -c .air.toml
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    command: npm run dev
+    ports:
+      - "3000:3000"
+
+  # 开发环境下启用 adminer
+  adminer:
+    profiles: []

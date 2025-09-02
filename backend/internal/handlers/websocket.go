@@ -141,7 +141,23 @@ func handleWebSocketMessages(conn *Connection) {
 		// 设置消息的房间ID
 		msg.RoomID = conn.roomID
 		
-		// 广播消息到房间内的所有连接
+		// 处理心跳ping消息
+		if msg.Type == "ping" {
+			// 直接回复pong给发送者，不广播
+			pongMsg := Message{
+				RoomID: conn.roomID,
+				Type:   "pong",
+				Data:   msg.Data, // 回传ping的数据
+			}
+			err := conn.ws.WriteJSON(pongMsg)
+			if err != nil {
+				log.Printf("Failed to send pong: %v", err)
+				break
+			}
+			continue // 不广播ping消息
+		}
+		
+		// 广播其他消息到房间内的所有连接
 		hub.broadcast <- &msg
 	}
 }

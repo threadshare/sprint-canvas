@@ -107,7 +107,13 @@ func NewRoom(name, createdBy string) *Room {
 		Differentiation: Differentiation{
 			ClassicFactors: make([]DifferentiationFactor, 0),
 			CustomFactors:  make([]DifferentiationFactor, 0),
-			Principles:     make([]string, 0),
+			Matrix: Matrix2x2{
+				XAxis:           "",
+				YAxis:           "",
+				Products:        make([]ProductPosition, 0),
+				WinningQuadrant: "",
+			},
+			Principles: make([]string, 0),
 		},
 		Approach: Approach{
 			Paths:       make([]Path, 0),

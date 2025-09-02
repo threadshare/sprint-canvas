@@ -11,7 +11,7 @@ import (
 // Service manages all agents
 type Service struct {
 	agents    map[string]Agent
-	llmClient LLMClient
+	LLMClient LLMClient  // Exported for use in handlers
 	mu        sync.RWMutex
 }
 
@@ -37,7 +37,7 @@ func NewService() (*Service, error) {
 	// Create service
 	service := &Service{
 		agents:    make(map[string]Agent),
-		llmClient: llmClient,
+		LLMClient: llmClient,
 	}
 	
 	// Register agents
@@ -92,6 +92,16 @@ func (s *Service) ProcessResearch(ctx context.Context, input AgentInput) (*Agent
 		return nil, err
 	}
 	return agent.Process(ctx, input)
+}
+
+// GetToolsForAgent returns tools for a specific agent
+func GetToolsForAgent(agentName string) []Tool {
+	toolList := tools.GetToolsForAgent(agentName)
+	agentTools := make([]Tool, len(toolList))
+	for i, t := range toolList {
+		agentTools[i] = t
+	}
+	return agentTools
 }
 
 // ProcessMultiAgent runs multiple agents in parallel

@@ -36,7 +36,13 @@ func NewResearchAgent(llmClient LLMClient) *ResearchAgent {
 	}
 	
 	// Get tools for this agent
-	agentTools := tools.GetToolsForAgent("ResearchAgent")
+	agentToolsRaw := tools.GetToolsForAgent("ResearchAgent")
+	
+	// Convert tools.Tool to agents.Tool
+	var agentTools []Tool
+	for _, t := range agentToolsRaw {
+		agentTools = append(agentTools, t)
+	}
 	
 	// Create ReAct processor
 	agent.processor = NewReActProcessor(agent, llmClient, agentTools, 5)

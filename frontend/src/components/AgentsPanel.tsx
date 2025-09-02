@@ -95,8 +95,8 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
     setLoadingAgent(agentType);
 
     try {
-      // TODO: 实际调用后端 API
-      const response = await fetch('/api/v1/agents/' + agentType, {
+      // 调用后端 API
+      const response = await fetch(`http://localhost:8080/api/v1/agents/${agentType}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,11 +104,13 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
         body: JSON.stringify({
           context: roomContext,
           query: message,
+          room_id: roomContext.includes('房间:') ? roomContext.split('房间: ')[1]?.split(',')[0] : undefined,
+          phase: roomContext.includes('当前阶段:') ? roomContext.split('当前阶段: ')[1]?.split(',')[0] : undefined,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get agent response');
+        throw new Error(`HTTP ${response.status}: Failed to get agent response`);
       }
 
       const data = await response.json();
@@ -127,7 +129,7 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
     } catch (error) {
       console.error('Agent API error:', error);
       
-      // 模拟响应 - 更符合角色定位
+      // 后端不可用时的模拟响应 - 更符合角色定位
       const mockResponses = {
         think: `🤔 **补充思考角度**
 

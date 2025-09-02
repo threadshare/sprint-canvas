@@ -1,8 +1,11 @@
 package handlers
 
 import (
+	"context"
+	"foundation-sprint/internal/database"
 	"foundation-sprint/internal/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,7 +32,17 @@ func CreateVote(c *gin.Context) {
 	}
 
 	// 检查房间是否存在
-	if _, exists := rooms[roomID]; !exists {
+	db, err := database.GetDatabase()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get database"})
+		return
+	}
+	
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	
+	room, err := db.Rooms().Get(ctx, roomID)
+	if err != nil || room == nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Room not found"})
 		return
 	}

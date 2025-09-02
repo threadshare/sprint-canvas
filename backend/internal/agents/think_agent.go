@@ -36,7 +36,13 @@ func NewThinkAgent(llmClient LLMClient) *ThinkAgent {
 	}
 	
 	// Get tools for this agent
-	agentTools := tools.GetToolsForAgent("ThinkAgent")
+	agentToolsRaw := tools.GetToolsForAgent("ThinkAgent")
+	
+	// Convert tools.Tool to agents.Tool
+	var agentTools []Tool
+	for _, t := range agentToolsRaw {
+		agentTools = append(agentTools, t)
+	}
 	
 	// Create ReAct processor
 	agent.processor = NewReActProcessor(agent, llmClient, agentTools, 5)

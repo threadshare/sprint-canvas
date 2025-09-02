@@ -8,6 +8,13 @@ import (
 	"time"
 )
 
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 // ReActProcessor implements the ReAct (Reasoning + Acting) pattern
 type ReActProcessor struct {
 	agent         Agent
@@ -63,6 +70,8 @@ func (r *ReActProcessor) Process(ctx context.Context, input AgentInput) (*AgentO
 		
 		// Generate thought and action
 		thoughtPrompt := r.buildThoughtPrompt(conversation, i+1)
+		fmt.Printf("=== REACT STEP %d ===\n", i+1)
+		fmt.Printf("Prompt: %s\n", thoughtPrompt[:min(200, len(thoughtPrompt))])
 		response, err := r.llmClient.CompleteWithTools(
 			ctx,
 			thoughtPrompt,
@@ -72,8 +81,10 @@ func (r *ReActProcessor) Process(ctx context.Context, input AgentInput) (*AgentO
 			WithMaxTokens(1000),
 		)
 		if err != nil {
+			fmt.Printf("ERROR calling LLM: %v\n", err)
 			return nil, fmt.Errorf("failed to generate thought: %w", err)
 		}
+		fmt.Printf("LLM Response: %s\n", response.Content[:min(200, len(response.Content))])
 		
 		// Parse the response for thought and action
 		thought, action, actionInput, isFinal := r.parseReActResponse(response.Content)
