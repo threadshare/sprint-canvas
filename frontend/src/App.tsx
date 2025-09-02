@@ -13,6 +13,8 @@ import type { Room } from '@/lib/api/types'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle, Loader2, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 // Convert backend data format to frontend format for compatibility
 const convertToFrontendFoundationData = (foundation: any) => {
@@ -94,6 +96,8 @@ const convertToFrontendApproachData = (approach: any) => {
 }
 
 function App() {
+  const { t } = useLanguage()
+  
   // Room state
   const [currentRoom, setCurrentRoom] = useState<Room | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string>('')
@@ -345,7 +349,7 @@ function App() {
 
   return (
     <>
-      <div className="min-h-screen gradient-foundation">
+      <div className={`min-h-screen gradient-foundation transition-all duration-300 ${showAIPanel ? 'mr-96' : ''}`}>
         <RoomHeader
           room={currentRoom}
           currentUserId={currentUserId}
@@ -356,14 +360,14 @@ function App() {
         />
 
         {/* AI Assistant Button - Fixed Position */}
-        <div className="fixed bottom-8 right-8 z-40">
+        <div className={`fixed bottom-8 z-40 transition-all duration-300 ${showAIPanel ? 'right-[25rem]' : 'right-8'}`}>
           <Button
             onClick={() => setShowAIPanel(!showAIPanel)}
             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg"
             size="lg"
           >
             <MessageCircle className="h-5 w-5 mr-2" />
-            AI 助手
+            {showAIPanel ? t('ai.closeAssistant') : t('ai.assistant')}
           </Button>
         </div>
 

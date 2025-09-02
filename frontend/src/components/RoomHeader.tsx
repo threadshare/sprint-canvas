@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ExportButton } from '@/components/export/ExportButton';
@@ -44,6 +46,7 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
   participants = [],
   onLeaveRoom,
 }) => {
+  const { t } = useLanguage();
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   const getStageDisplayName = (stage: string) => {
@@ -221,6 +224,9 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
               </DialogContent>
             </Dialog>
 
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+
             {/* Settings */}
             <Button variant="ghost" size="sm">
               <Settings className="h-4 w-4" />
@@ -228,7 +234,7 @@ export const RoomHeader: React.FC<RoomHeaderProps> = ({
 
             {/* Leave Room */}
             <Button variant="outline" size="sm" onClick={onLeaveRoom}>
-              离开房间
+              {t('room.leaveRoom')}
             </Button>
           </div>
         </div>

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,6 +24,7 @@ interface RoomEntryProps {
 }
 
 export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'create' | 'join'>('create');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { AgentCard } from '@/components/cards/AgentCard';
 import { X, MessageCircle, Minimize2, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -24,6 +25,7 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
   roomContext = '',
   className,
 }) => {
+  const { t } = useLanguage();
   const [activeAgent, setActiveAgent] = useState<'think' | 'critique' | 'research' | null>(null);
   const [isMinimized, setIsMinimized] = useState(false);
   const [agentMessages, setAgentMessages] = useState<{
@@ -40,9 +42,9 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
   const agents = [
     {
       id: 'think' as const,
-      title: '帮我想',
-      description: '智能提问，补充思考维度，提供创意激发和案例推荐',
-      shortDesc: '补充思考',
+      title: t('ai.thinkAgent'),
+      description: t('ai.thinkLongDesc'),
+      shortDesc: t('ai.thinkDesc'),
       systemPrompt: `你是一个思考补充助手，专门帮助用户发现思考盲点和提供新的视角。你的职责：
 1. 智能提问：基于当前讨论提出关键问题
 2. 视角补充：提供容易忽略的思考维度  
@@ -53,9 +55,9 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
     },
     {
       id: 'critique' as const,
-      title: '批判我',
-      description: '挑战隐含假设，评估市场现实性，分析竞争威胁和执行难度',
-      shortDesc: '批判分析',
+      title: t('ai.critiqueAgent'),
+      description: t('ai.critiqueLongDesc'),
+      shortDesc: t('ai.critiqueDesc'),
       systemPrompt: `你是一个批判性思维助手，专门挑战理想主义想法并评估市场现实性。你的职责：
 1. 假设质疑：识别并挑战用户的隐含假设
 2. 市场验证：评估需求的真实性和市场规模
@@ -66,9 +68,9 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
     },
     {
       id: 'research' as const,
-      title: '查一查',
-      description: '深度收集市场数据、竞品分析、技术可行性和用户洞察',
-      shortDesc: '深度研究',
+      title: t('ai.researchAgent'),
+      description: t('ai.researchLongDesc'),
+      shortDesc: t('ai.researchDesc'),
       systemPrompt: `你是一个深度研究助手，专门收集和分析相关资料。你的职责：
 1. 市场数据：提供行业报告和用户数据分析
 2. 竞品分析：详细对比功能特性和定价策略
@@ -221,7 +223,7 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
         {!isMinimized && (
           <div className="flex items-center gap-2">
             <MessageCircle className="h-5 w-5 text-blue-600" />
-            <h3 className="font-semibold text-gray-800">AI 助手团队</h3>
+            <h3 className="font-semibold text-gray-800">{t('ai.assistant')}</h3>
           </div>
         )}
         
@@ -307,9 +309,9 @@ export const AgentsPanel: React.FC<AgentsPanelProps> = ({
               <div className="flex items-center justify-center h-full text-center p-6">
                 <div>
                   <MessageCircle className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                  <h4 className="font-medium text-gray-800 mb-2">选择一个AI助手</h4>
+                  <h4 className="font-medium text-gray-800 mb-2">{t('ai.selectAgent')}</h4>
                   <p className="text-sm text-gray-600">
-                    从上方选择一个助手开始对话
+                    {t('ai.startConversation')}
                   </p>
                 </div>
               </div>
