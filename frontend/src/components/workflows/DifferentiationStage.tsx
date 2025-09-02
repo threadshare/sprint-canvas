@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { EditableCard } from '@/components/cards/EditableCard';
 import { Matrix2x2Card } from '@/components/cards/Matrix2x2Card';
@@ -65,6 +66,7 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
   onNextStage,
   className,
 }) => {
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState<'classic' | 'custom' | 'matrix' | 'principles'>('classic');
   const [selectedFactors, setSelectedFactors] = useState<DifferentiationFactor[]>([]);
 
@@ -169,10 +171,10 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
   };
 
   const steps = [
-    { id: 'classic', title: '经典差异化因素', description: '从通用维度开始热身' },
-    { id: 'custom', title: '自定义差异化因素', description: '创建专属的差异化维度' },
-    { id: 'matrix', title: '2x2 分析矩阵', description: '可视化竞争定位' },
-    { id: 'principles', title: '项目原则', description: '提炼决策指导原则' },
+    { id: 'classic', title: t('differentiation.classicFactors'), description: t('differentiation.factorsDesc') },
+    { id: 'custom', title: t('differentiation.customFactors'), description: t('differentiation.factorsDesc') },
+    { id: 'matrix', title: t('differentiation.matrix'), description: t('differentiation.matrixDesc') },
+    { id: 'principles', title: t('differentiation.principles'), description: t('differentiation.principlesDesc') },
   ];
 
   return (
@@ -180,12 +182,11 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
       {/* 阶段说明 */}
       <Card className="border-purple-200 bg-purple-50">
         <CardHeader>
-          <CardTitle className="text-purple-800">第二阶段：找到差异化优势</CardTitle>
+          <CardTitle className="text-purple-800">{t('differentiation.stageTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-purple-700 text-sm leading-relaxed mb-4">
-            在这个阶段，我们将定义产品的独特价值定位。首先从经典差异化因素热身，
-            然后创建自定义的差异化维度，最后通过2x2矩阵找到我们的"胜利象限"。
+            {t('differentiation.stageDesc')}
           </p>
           
           {/* 步骤指示器 */}

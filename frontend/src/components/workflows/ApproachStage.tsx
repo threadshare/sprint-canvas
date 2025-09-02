@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { EditableCard } from '@/components/cards/EditableCard';
 import { MagicLensCard } from '@/components/cards/MagicLensCard';
@@ -93,6 +94,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
   onComplete,
   className,
 }) => {
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState<'paths' | 'lenses' | 'decision'>('paths');
   
   const addPath = (name: string, description: string) => {
@@ -220,9 +222,9 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
   };
 
   const steps = [
-    { id: 'paths', title: '执行路径', description: '列出所有可能的执行方案' },
-    { id: 'lenses', title: 'Magic Lenses', description: '多角度评估各个方案' },
-    { id: 'decision', title: '最终决策', description: '选择最佳路径并说明理由' },
+    { id: 'paths', title: t('approach.paths'), description: t('approach.pathsDesc') },
+    { id: 'lenses', title: t('approach.magicLenses'), description: t('approach.magicLensesDesc') },
+    { id: 'decision', title: t('approach.selectedPath'), description: t('approach.selectedPathDesc') },
   ];
 
   return (
@@ -230,12 +232,11 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
       {/* 阶段说明 */}
       <Card className="border-green-200 bg-green-50">
         <CardHeader>
-          <CardTitle className="text-green-800">第三阶段：确定项目推进方法</CardTitle>
+          <CardTitle className="text-green-800">{t('approach.stageTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-green-700 text-sm leading-relaxed mb-4">
-            在这个阶段，我们将确定具体的执行方案。首先列出所有可能的路径，
-            然后使用"Magic Lenses"从不同角度系统评估，最后做出最佳选择。
+            {t('approach.stageDesc')}
           </p>
           
           {/* 步骤指示器 */}
@@ -268,13 +269,12 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Route className="h-5 w-5" />
-              步骤1: 列出所有可能的执行路径
+              {t('approach.pathsTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <p className="text-sm text-gray-600">
-              把所有可能的路径都列出来看看。即使只有一个明确的想法，
-              也要思考：万一这条路走不通怎么办？有没有备用方案？
+              {t('approach.pathsDesc')}
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

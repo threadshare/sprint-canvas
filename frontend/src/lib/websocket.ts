@@ -41,7 +41,7 @@ class WebSocketService {
     this.listeners.set('error', new Set());
   }
 
-  connect(roomId: string, userId: string) {
+  connect(roomId: string, userId: string, userName?: string) {
     // 避免重复连接
     if (this.ws?.readyState === WebSocket.OPEN && this.roomId === roomId && this.userId === userId) {
       return;
@@ -56,7 +56,8 @@ class WebSocketService {
 
     const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsHost = window.location.hostname === 'localhost' ? 'localhost:8080' : window.location.host;
-    const wsUrl = `${wsProtocol}//${wsHost}/ws/${roomId}?userId=${userId}`;
+    const userNameParam = userName ? `&userName=${encodeURIComponent(userName)}` : '';
+    const wsUrl = `${wsProtocol}//${wsHost}/ws/${roomId}?userId=${userId}${userNameParam}`;
 
     console.log(`Connecting to WebSocket: ${wsUrl}`);
     this.ws = new WebSocket(wsUrl);

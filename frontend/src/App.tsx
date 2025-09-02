@@ -110,6 +110,9 @@ function App() {
   
   // AI Panel state
   const [showAIPanel, setShowAIPanel] = useState(false)
+  
+  // URL room ID for invitation links
+  const [urlRoomId, setUrlRoomId] = useState<string | null>(null)
 
   // Check URL parameters on load
   useEffect(() => {
@@ -117,8 +120,8 @@ function App() {
     const roomIdFromUrl = urlParams.get('roomId')
     
     if (roomIdFromUrl) {
-      // TODO: Show join room dialog with pre-filled room ID
       console.log('Room ID from URL:', roomIdFromUrl)
+      setUrlRoomId(roomIdFromUrl)
     }
   }, [])
 
@@ -198,8 +201,8 @@ function App() {
     webSocketService.on('message', handleMessage)
     webSocketService.on('error', handleError)
 
-    // Connect to WebSocket
-    webSocketService.connect(currentRoom.id, currentUserId)
+    // Connect to WebSocket with userName
+    webSocketService.connect(currentRoom.id, currentUserId, currentUserName)
 
     // Cleanup
     return () => {
@@ -209,7 +212,7 @@ function App() {
       webSocketService.off('error', handleError)
       webSocketService.disconnect()
     }
-  }, [currentRoom?.id, currentUserId]) // 只依赖roomId，而不是整个currentRoom对象
+  }, [currentRoom?.id, currentUserId, currentUserName]) // 依赖roomId、userId和userName
 
   // 移除refreshRoomData，直接在需要的地方调用API
 
@@ -338,7 +341,10 @@ function App() {
   if (!currentRoom) {
     return (
       <>
-        <RoomEntry onRoomJoined={handleRoomJoined} />
+        <RoomEntry 
+          onRoomJoined={handleRoomJoined} 
+          initialRoomId={urlRoomId} 
+        />
         <Toaster />
       </>
     )

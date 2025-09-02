@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { FoundationSprintReport } from './FoundationSprintReport';
 import type { Room } from '@/lib/api/types';
 import {
@@ -33,6 +34,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   variant = 'default',
   size = 'default',
 }) => {
+  const { t } = useLanguage();
   const [showReport, setShowReport] = useState(false);
 
   const handleExportJSON = () => {
@@ -303,7 +305,7 @@ ${participants.find(p => p.online)?.name || '团队'}
         <DropdownMenuTrigger asChild>
           <Button variant={variant} size={size} className={className}>
             <Download className="h-4 w-4 mr-2" />
-            导出报告
+            {t('export.title')}
             <ChevronDown className="h-4 w-4 ml-1" />
           </Button>
         </DropdownMenuTrigger>

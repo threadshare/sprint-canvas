@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
@@ -21,11 +21,12 @@ import {
 
 interface RoomEntryProps {
   onRoomJoined: (room: Room, userId: string, userName: string) => void;
+  initialRoomId?: string | null;
 }
 
-export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
+export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined, initialRoomId }) => {
   const { t } = useLanguage();
-  const [activeTab, setActiveTab] = useState<'create' | 'join'>('create');
+  const [activeTab, setActiveTab] = useState<'create' | 'join'>(initialRoomId ? 'join' : 'create');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -35,11 +36,19 @@ export const RoomEntry: React.FC<RoomEntryProps> = ({ onRoomJoined }) => {
     userName: '',
   });
   
-  // Join room form
+  // Join room form (pre-fill with URL room ID if available)
   const [joinForm, setJoinForm] = useState({
-    roomId: '',
+    roomId: initialRoomId || '',
     userName: '',
   });
+  
+  // Auto-switch to join tab if we have a room ID from URL
+  useEffect(() => {
+    if (initialRoomId) {
+      setActiveTab('join');
+      setJoinForm(prev => ({ ...prev, roomId: initialRoomId }));
+    }
+  }, [initialRoomId]);
 
   const handleCreateRoom = async (e: React.FormEvent) => {
     e.preventDefault();

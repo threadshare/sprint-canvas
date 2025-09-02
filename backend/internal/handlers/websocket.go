@@ -33,9 +33,10 @@ type Hub struct {
 
 // WebSocket 连接
 type Connection struct {
-	ws     *websocket.Conn
-	roomID string
-	userID string
+	ws       *websocket.Conn
+	roomID   string
+	userID   string
+	userName string
 }
 
 // WebSocket 消息
@@ -68,12 +69,34 @@ func (h *Hub) run() {
 			h.rooms[conn.roomID][conn.ws] = true
 			log.Printf("User %s connected to room %s", conn.userID, conn.roomID)
 			
+			// 广播用户加入消息给房间内其他用户
+			joinMsg := &Message{
+				RoomID: conn.roomID,
+				Type:   "user_join",
+				Data: map[string]interface{}{
+					"userId":   conn.userID,
+					"userName": conn.userName,
+				},
+			}
+			h.broadcast <- joinMsg
+			
 		case conn := <-h.unregister:
 			if connections, exists := h.rooms[conn.roomID]; exists {
 				if _, exists := connections[conn.ws]; exists {
 					delete(connections, conn.ws)
 					conn.ws.Close()
 					log.Printf("User %s disconnected from room %s", conn.userID, conn.roomID)
+					
+					// 广播用户离开消息给房间内其他用户
+					leaveMsg := &Message{
+						RoomID: conn.roomID,
+						Type:   "user_leave",
+						Data: map[string]interface{}{
+							"userId":   conn.userID,
+							"userName": conn.userName,
+						},
+					}
+					h.broadcast <- leaveMsg
 				}
 			}
 			
@@ -96,10 +119,16 @@ func (h *Hub) run() {
 func HandleWebSocket(c *gin.Context) {
 	roomID := c.Param("roomId")
 	userID := c.Query("userId")
+	userName := c.Query("userName")
 	
 	if roomID == "" || userID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing roomId or userId"})
 		return
+	}
+	
+	// 如果没有提供userName，使用userID作为默认值
+	if userName == "" {
+		userName = userID
 	}
 	
 	// 升级 HTTP 连接为 WebSocket
@@ -111,9 +140,10 @@ func HandleWebSocket(c *gin.Context) {
 	
 	// 创建连接对象
 	conn := &Connection{
-		ws:     ws,
-		roomID: roomID,
-		userID: userID,
+		ws:       ws,
+		roomID:   roomID,
+		userID:   userID,
+		userName: userName,
 	}
 	
 	// 注册连接
