@@ -7,8 +7,11 @@ export type WebSocketEventType =
   | 'status_update'
   | 'user_join'
   | 'user_leave'
+  | 'user_list'
   | 'cursor_update'
   | 'chat_message'
+  | 'vote_created'
+  | 'vote_updated'
   | 'ping'
   | 'pong';
 
@@ -42,12 +45,16 @@ class WebSocketService {
   }
 
   connect(roomId: string, userId: string, userName?: string) {
+    console.log('🔗 WebSocket connect() called with:', { roomId, userId, userName });
+    
     // 避免重复连接
     if (this.ws?.readyState === WebSocket.OPEN && this.roomId === roomId && this.userId === userId) {
+      console.log('♻️ Already connected to same room/user, skipping');
       return;
     }
     
     if (this.ws?.readyState === WebSocket.OPEN || this.ws?.readyState === WebSocket.CONNECTING) {
+      console.log('🔄 Disconnecting existing connection');
       this.disconnect();
     }
 
@@ -59,11 +66,11 @@ class WebSocketService {
     const userNameParam = userName ? `&userName=${encodeURIComponent(userName)}` : '';
     const wsUrl = `${wsProtocol}//${wsHost}/ws/${roomId}?userId=${userId}${userNameParam}`;
 
-    console.log(`Connecting to WebSocket: ${wsUrl}`);
+    console.log(`🚀 Creating WebSocket connection to: ${wsUrl}`);
     this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {
-      console.log(`Connected to room ${roomId} as ${userId}`);
+      console.log(`✅ WebSocket opened! Connected to room ${roomId} as ${userId} (${userName})`);
       this.reconnectAttempts = 0;
       this.startHeartbeat(); // 开始心跳
       this.emit('connect');
@@ -81,7 +88,7 @@ class WebSocketService {
     };
 
     this.ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      console.error('❌ WebSocket error:', error);
       this.emit('error', error);
     };
 

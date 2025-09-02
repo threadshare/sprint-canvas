@@ -6,8 +6,8 @@ import { EditableCard } from '@/components/cards/EditableCard';
 import { ProblemCard } from '@/components/cards/ProblemCard';
 import { CompetitionCard } from '@/components/cards/CompetitionCard';
 import { AdvantageCard } from '@/components/cards/AdvantageCard';
-import { VoteCard } from '@/components/cards/VoteCard';
 import { AIWorkflowHelper } from '@/components/ai/AIWorkflowHelper';
+import { VoteDialog } from '@/components/VoteDialog';
 import { Plus, Users, AlertCircle, Target, TrendingUp, Vote } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -47,6 +47,7 @@ interface FoundationStageProps {
   onDataChange?: (data: FoundationData) => void;
   onNextStage?: () => void;
   className?: string;
+  participants?: Array<{ id: string; name: string; online: boolean }>;
 }
 
 
@@ -59,10 +60,13 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
   onDataChange,
   onNextStage,
   className,
+  participants = [],
 }) => {
   const { t } = useLanguage();
-  const [activeVote, setActiveVote] = useState<keyof FoundationData | null>(null);
-  const [votes, setVotes] = useState<Record<string, any>>({});
+  const [voteDialogOpen, setVoteDialogOpen] = useState(false);
+  const [voteSubject, setVoteSubject] = useState<'customers' | 'problems' | 'competition' | 'advantages'>('customers');
+  
+  const canVote = participants.filter(p => p.online).length > 1;
 
   const addCustomer = (text: string) => {
     if (!text.trim()) return;
@@ -204,14 +208,29 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
       <div className="space-y-4">
         <Card className="border-gray-200">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <Users className="h-6 w-6" />
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold">{t('foundation.customers')}</h3>
-                <p className="text-sm text-gray-600 font-normal mt-1">
-                  {t('foundation.customersDesc')}
-                </p>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Users className="h-6 w-6" />
+                <div>
+                  <h3 className="text-lg font-semibold">{t('foundation.customers')}</h3>
+                  <p className="text-sm text-gray-600 font-normal mt-1">
+                    {t('foundation.customersDesc')}
+                  </p>
+                </div>
               </div>
+              {canVote && !readOnly && data.customers.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setVoteSubject('customers');
+                    setVoteDialogOpen(true);
+                  }}
+                >
+                  <Vote className="h-4 w-4 mr-1" />
+                  {t('common.vote')}
+                </Button>
+              )}
             </CardTitle>
           </CardHeader>
           
@@ -425,12 +444,31 @@ export const FoundationStage: React.FC<FoundationStageProps> = ({
                 disabled={!isStageComplete()}
                 className="bg-green-600 hover:bg-green-700"
               >
-                下一阶段：差异化分析
+                {t('foundation.nextStageDifferentiation')}
               </Button>
             )}
           </div>
         </CardContent>
       </Card>
+      
+      {/* Vote Dialog */}
+      {roomId && currentUserId && currentUserName && (
+        <VoteDialog
+          isOpen={voteDialogOpen}
+          onClose={() => setVoteDialogOpen(false)}
+          roomId={roomId}
+          currentUserId={currentUserId}
+          currentUserName={currentUserName}
+          voteSubject={voteSubject}
+          options={
+            voteSubject === 'customers' ? data.customers :
+            voteSubject === 'problems' ? data.problems.map(p => p.description) :
+            voteSubject === 'competition' ? data.competition.map(c => c.name) :
+            data.advantages.map(a => a.description)
+          }
+          participants={participants}
+        />
+      )}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -56,26 +57,29 @@ export const FoundationSprintReport: React.FC<FoundationSprintReportProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { t } = useLanguage();
   const reportRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [reportData, setReportData] = useState<EditableReportData>({
-    title: `${room.name} - Foundation Sprint 报告`,
-    subtitle: '产品战略与执行路径分析',
-    executiveSummary: `本次 Foundation Sprint 通过系统化的三阶段分析，帮助团队在 ${room.foundation.customers.length} 个目标客户群体中找到了核心定位，识别了 ${room.foundation.problems.length} 个关键问题，并最终确定了最优的执行路径。`,
+    title: `${room.name} - Foundation Sprint ${t('export.report')}`,
+    subtitle: t('export.reportSubtitle'),
+    executiveSummary: t('export.executiveSummaryTemplate')
+      .replace('{{customerCount}}', String(room.foundation.customers.length))
+      .replace('{{problemCount}}', String(room.foundation.problems.length)),
     keyInsights: [
-      '目标客户群体清晰，市场需求明确',
-      '竞争优势突出，差异化定位准确',
-      '执行路径可行性高，资源需求合理',
+      t('export.insight1'),
+      t('export.insight2'),
+      t('export.insight3'),
     ],
     recommendations: [
-      '立即启动MVP开发，验证核心假设',
-      '建立用户反馈收集机制',
-      '制定详细的产品路线图',
+      t('export.recommendation1'),
+      t('export.recommendation2'),
+      t('export.recommendation3'),
     ],
     nextSteps: [
-      '启动 Design Sprint 验证用户体验',
-      '进行技术可行性评估',
-      '准备种子轮融资材料',
+      t('export.nextStep1'),
+      t('export.nextStep2'),
+      t('export.nextStep3'),
     ],
   });
 

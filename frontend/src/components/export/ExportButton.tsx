@@ -69,7 +69,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   };
 
   const handleShareByEmail = () => {
-    const subject = encodeURIComponent(`${room.name} - Foundation Sprint 结果`);
+    const subject = encodeURIComponent(`${room.name} - Foundation Sprint ${t('export.results')}`);
     const body = encodeURIComponent(generateEmailContent());
     const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
     window.open(mailtoLink);
@@ -109,47 +109,47 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
     const quadrantDist = getQuadrantDistribution();
     const pathScores = getPathScores();
 
-    return `# ${room.name} - Foundation Sprint 报告
+    return `# ${room.name} - Foundation Sprint ${t('export.report')}
 
-> **状态**: ${getStatusText(room.status)} | **参与者**: ${participants.length} 人 | **生成时间**: ${new Date().toLocaleString('zh-CN')}
+> **${t('export.status')}**: ${getStatusText(room.status)} | **${t('export.participants')}**: ${participants.length} ${t('export.people')} | **${t('export.generatedAt')}**: ${new Date().toLocaleString('zh-CN')}
 
-## 🎯 执行摘要
+## 🎯 ${t('export.executiveSummary')}
 
-通过 Foundation Sprint 方法论，我们成功完成了产品战略的核心要素定义，为后续的产品开发和市场验证奠定了坚实基础。
+${t('export.executiveSummaryContent')}
 
-### 关键数据
-- 识别了 **${room.foundation.customers.length}** 个目标客户群体
-- 发现了 **${room.foundation.problems.length}** 个核心问题
-- 分析了 **${room.foundation.competition.length}** 个竞争对手
-- 确定了 **${room.foundation.advantages.length}** 个团队优势
-- 评估了 **${room.approach.paths.length}** 个执行路径
-- 应用了 **${room.approach.magic_lenses.length}** 个评估维度
+### ${t('export.keyData')}
+- ${t('export.identifiedCustomers').replace('{{count}}', String(room.foundation.customers.length))}
+- ${t('export.discoveredProblems').replace('{{count}}', String(room.foundation.problems.length))}
+- ${t('export.analyzedCompetitors').replace('{{count}}', String(room.foundation.competition.length))}
+- ${t('export.identifiedAdvantages').replace('{{count}}', String(room.foundation.advantages.length))}
+- ${t('export.evaluatedPaths').replace('{{count}}', String(room.approach.paths.length))}
+- ${t('export.appliedDimensions').replace('{{count}}', String(room.approach.magic_lenses.length))}
 
-## 👥 基础阶段 (Foundation)
+## 👥 ${t('foundation.title')} (Foundation)
 
-### 目标客户
-${room.foundation.customers.map(c => `- ${c}`).join('\n') || '- *待完善*'}
+### ${t('foundation.customers')}
+${room.foundation.customers.map(c => `- ${c}`).join('\n') || `- *${t('export.toBeCompleted')}*`}
 
-### 核心问题
-${room.foundation.problems.map(p => `- ${p}`).join('\n') || '- *待完善*'}
+### ${t('foundation.problems')}
+${room.foundation.problems.map(p => `- ${p}`).join('\n') || `- *${t('export.toBeCompleted')}*`}
 
-### 竞争对手
-${room.foundation.competition.map(c => `- ${c}`).join('\n') || '- *待完善*'}
+### ${t('foundation.competition')}
+${room.foundation.competition.map(c => `- ${c}`).join('\n') || `- *${t('export.toBeCompleted')}*`}
 
-### 团队优势
-${room.foundation.advantages.map(a => `- ${a}`).join('\n') || '- *待完善*'}
+### ${t('foundation.advantages')}
+${room.foundation.advantages.map(a => `- ${a}`).join('\n') || `- *${t('export.toBeCompleted')}*`}
 
-## 🎨 差异化阶段 (Differentiation)
+## 🎨 ${t('differentiation.title')} (Differentiation)
 
-### 核心原则
-${room.differentiation.principles.map(p => `- **${p}**`).join('\n') || '- *待定义*'}
+### ${t('differentiation.principles')}
+${room.differentiation.principles.map(p => `- **${p}**`).join('\n') || `- *${t('export.toBeDefined')}*`}
 
-### 2x2 定位矩阵
+### 2x2 ${t('differentiation.matrix')}
 
-#### 矩阵设置
-- **X轴 (横轴)**: ${room.differentiation.matrix.x_axis || '*待定义*'}
-- **Y轴 (纵轴)**: ${room.differentiation.matrix.y_axis || '*待定义*'}
-- **目标象限**: ${room.differentiation.matrix.winning_quadrant || '*待确定*'}
+#### ${t('export.matrixSettings')}
+- **${t('export.xAxis')}**: ${room.differentiation.matrix.x_axis || `*${t('export.toBeDefined')}*`}
+- **${t('export.yAxis')}**: ${room.differentiation.matrix.y_axis || `*${t('export.toBeDefined')}*`}
+- **${t('differentiation.winningQuadrant')}**: ${room.differentiation.matrix.winning_quadrant || `*${t('export.toBeConfirmed')}*`}
 
 #### 产品分布分析
 
@@ -291,10 +291,10 @@ ${participants.find(p => p.online)?.name || '团队'}
 
   const getStatusText = (status: string) => {
     const statusMap = {
-      foundation: '基础阶段',
-      differentiation: '差异化阶段', 
-      approach: '方法阶段',
-      completed: '已完成',
+      foundation: t('foundation.title'),
+      differentiation: t('differentiation.title'), 
+      approach: t('approach.title'),
+      completed: t('stages.completed'),
     };
     return statusMap[status as keyof typeof statusMap] || status;
   };
@@ -312,27 +312,27 @@ ${participants.find(p => p.online)?.name || '团队'}
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuItem onClick={() => setShowReport(true)}>
             <FileText className="h-4 w-4 mr-2" />
-            专业报告 (PDF)
+            {t('export.professionalReport')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleExportMarkdown}>
             <FileText className="h-4 w-4 mr-2" />
-            Markdown 文档
+            {t('export.markdownDoc')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleExportJSON}>
             <FileImage className="h-4 w-4 mr-2" />
-            数据备份 (JSON)
+            {t('export.dataBackup')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleShareByEmail}>
             <Mail className="h-4 w-4 mr-2" />
-            邮件分享
+            {t('export.shareByEmail')}
           </DropdownMenuItem>
           <DropdownMenuItem 
             onClick={() => {
               if (navigator.share) {
                 navigator.share({
                   title: `${room.name} - Foundation Sprint`,
-                  text: `查看我们的 Foundation Sprint 成果！`,
+                  text: t('export.shareText'),
                   url: window.location.href,
                 });
               }
@@ -340,7 +340,7 @@ ${participants.find(p => p.online)?.name || '团队'}
             disabled={!navigator.share}
           >
             <Share2 className="h-4 w-4 mr-2" />
-            系统分享
+            {t('export.systemShare')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

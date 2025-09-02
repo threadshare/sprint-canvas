@@ -96,26 +96,32 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* Foundation Sprint Custom Theme */
+/* Foundation Sprint Custom Theme - 真实手写卡片 */
 :root {
-  /* Foundation Sprint 专属色彩系统 */
-  --foundation-warm: oklch(0.97 0.01 45);
-  --foundation-paper: oklch(0.99 0.002 45);
-  --foundation-ink: oklch(0.25 0.015 240);
-  --foundation-accent-blue: oklch(0.65 0.15 240);
-  --foundation-accent-amber: oklch(0.85 0.12 75);
-  --foundation-accent-emerald: oklch(0.7 0.13 145);
-  --foundation-accent-rose: oklch(0.72 0.15 15);
-  --foundation-accent-purple: oklch(0.68 0.14 285);
+  /* 工作坊环境背景 */
+  --workshop-wall: #FEFEFE; /* 白板背景色 */
+  --workshop-board: #F8F8F8; /* 灰白挂图纸色 */
   
-  /* 纸质卡片阴影系统 */
-  --paper-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 3px -1px rgb(0 0 0 / 0.1);
-  --paper-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --paper-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --paper-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* 手写便签纸的真实色彩 - 3M便签纸色彩 */
+  --sticky-yellow: #FFF176; /* 经典Post-it黄 */
+  --sticky-blue: #4FC3F7; /* 天蓝色便签 */  
+  --sticky-green: #81C784; /* 浅绿色便签 */
+  --sticky-pink: #F06292; /* 粉色便签 */
+  --sticky-orange: #FFB74D; /* 橙色便签 */
+  --sticky-purple: #BA68C8; /* 淡紫色便签 */
   
-  /* 纸质质感纹理 */
-  --paper-texture: radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 0);
+  /* 手写笔迹色彩 */
+  --ink-black: #2C2C2C; /* 黑色圆珠笔 */
+  --ink-blue: #1976D2; /* 蓝色圆珠笔 */
+  --ink-red: #D32F2F; /* 红色圆珠笔 */
+  --pencil-gray: #424242; /* 铅笔色 */
+  
+  /* 真实便签阴影 - 更立体感 */
+  --sticky-shadow: 0 3px 10px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02);
+  --sticky-hover: 0 6px 20px rgba(0,0,0,0.18), 0 3px 8px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+  
+  /* 手工纸张纹理 - 更细腻的纹理 */
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23000' fill-opacity='0.02'%3E%3Ccircle cx='12' cy='15' r='0.3'/%3E%3Ccircle cx='45' cy='8' r='0.2'/%3E%3Ccircle cx='25' cy='35' r='0.25'/%3E%3Ccircle cx='50' cy='45' r='0.15'/%3E%3Ccircle cx='8' cy='48' r='0.2'/%3E%3Ccircle cx='38' cy='6' r='0.3'/%3E%3Ccircle cx='18' cy='52' r='0.15'/%3E%3Ccircle cx='42' cy='28' r='0.2'/%3E%3Cellipse cx='30' cy='20' rx='0.8' ry='0.2' fill-opacity='0.01'/%3E%3Cellipse cx='15' cy='40' rx='0.6' ry='0.15' fill-opacity='0.015'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 .dark {
@@ -135,63 +141,199 @@ body {
   }
   
   body {
-    @apply bg-background text-foreground;
-    background: linear-gradient(135deg, var(--foundation-warm) 0%, var(--foundation-paper) 100%);
+    @apply text-foreground;
+    /* 工作坊网格线白板效果 */
+    background: var(--workshop-wall);
+    background-image: 
+      /* 主网格线 */
+      linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px),
+      /* 细网格线 */
+      linear-gradient(rgba(0,0,0,0.01) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.01) 1px, transparent 1px),
+      /* 纸张纹理 */
+      var(--paper-grain);
+    background-size: 
+      100px 100px,  /* 主网格 */
+      100px 100px,
+      20px 20px,    /* 细网格 */
+      20px 20px,
+      40px 40px;    /* 纹理 */
+    background-position: 0 0, 0 0, 0 0, 0 0, 5px 5px;
+    /* 保持系统字体作为默认，手写字体只用于卡片 */
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
     line-height: 1.6;
     letter-spacing: -0.01em;
+    color: var(--ink-black);
   }
 }
 
 @layer components {
-  /* 纸质卡片基础样式 */
+  /* 真实手写便签纸效果 */
   .paper-card {
-    @apply relative bg-white rounded-xl border border-gray-100;
-    background: linear-gradient(135deg, 
-      var(--foundation-paper) 0%, 
-      oklch(0.985 0.005 45) 100%);
-    background-image: var(--paper-texture);
-    background-size: 20px 20px;
-    box-shadow: var(--paper-shadow);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    @apply relative;
+    background: var(--sticky-cream);
+    background-image: var(--paper-grain);
+    background-size: 25px 25px;
+    border-radius: 2px;
+    box-shadow: var(--sticky-shadow);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* 手工便签的不规则感 */
+    transform: rotate(-1deg);
+    border: none;
+    position: relative;
+    
+    /* 便签纸的卷边效果 */
+  }
+  
+  .paper-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(-45deg, transparent 50%, rgba(0,0,0,0.05) 50%);
+    border-radius: 0 2px 0 0;
+  }
+  
+  .paper-card:nth-child(even) {
+    transform: rotate(1.5deg);
+  }
+  
+  .paper-card:nth-child(3n) {
+    transform: rotate(-1.2deg);
+  }
+  
+  .paper-card:nth-child(4n) {
+    transform: rotate(2.1deg);
+  }
+  
+  .paper-card:nth-child(5n) {
+    transform: rotate(-0.6deg);
+  }
+  
+  .paper-card:nth-child(6n) {
+    transform: rotate(1.8deg);
   }
   
   .paper-card:hover {
-    box-shadow: var(--paper-shadow-lg);
-    transform: translateY(-2px);
+    box-shadow: var(--sticky-hover);
+    transform: translateY(-4px) rotate(0deg) scale(1.03);
+    z-index: 10;
   }
   
-  /* Foundation Sprint 主题色卡片 */
+  /* 不同类型的真实便签纸 */
   .card-customer {
     @apply paper-card;
-    background: linear-gradient(135deg, 
-      var(--foundation-accent-blue) 0%, 
-      oklch(0.95 0.05 240) 100%);
-    border-color: var(--foundation-accent-blue);
+    background: var(--sticky-blue);
+    background-image: var(--paper-grain);
+    
+    /* 手写下划线效果 */
+  }
+  
+  .card-customer::after {
+    content: '';
+    position: absolute;
+    bottom: 18px;
+    left: 10px;
+    right: 15px;
+    height: 2px;
+    background: var(--ink-blue);
+    opacity: 0.25;
+    transform: rotate(-0.8deg);
+    border-radius: 2px;
+    /* 手写下划线的不平直感 */
+    background: 
+      repeating-linear-gradient(to right, 
+        var(--ink-blue) 0px, var(--ink-blue) 3px, 
+        transparent 3px, transparent 5px),
+      var(--ink-blue);
+    filter: blur(0.3px);
+    pointer-events: none;
   }
   
   .card-problem {
     @apply paper-card;
-    background: linear-gradient(135deg, 
-      var(--foundation-accent-amber) 0%, 
-      oklch(0.95 0.05 75) 100%);
-    border-color: var(--foundation-accent-amber);
+    background: var(--sticky-yellow);
+    background-image: var(--paper-grain);
+    
+    /* 黄色便签保持经典样式 */
+  }
+  
+  .card-problem::after {
+    content: '⚠';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: var(--ink-red);
+    font-size: 18px;
+    transform: rotate(12deg);
+    opacity: 0.7;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    pointer-events: none;
   }
   
   .card-competition {
     @apply paper-card;
-    background: linear-gradient(135deg, 
-      var(--foundation-accent-rose) 0%, 
-      oklch(0.95 0.05 15) 100%);
-    border-color: var(--foundation-accent-rose);
+    background: var(--sticky-pink);
+    background-image: var(--paper-grain);
+    
+  }
+  
+  .card-competition::after {
+    content: '⚡';
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    color: var(--ink-red);
+    font-size: 16px;
+    transform: rotate(-8deg) scale(1.2);
+    opacity: 0.6;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    pointer-events: none;
   }
   
   .card-advantage {
     @apply paper-card;
-    background: linear-gradient(135deg, 
-      var(--foundation-accent-emerald) 0%, 
-      oklch(0.95 0.05 145) 100%);
-    border-color: var(--foundation-accent-emerald);
+    background: var(--sticky-green);
+    background-image: var(--paper-grain);
+    
+  }
+  
+  .card-advantage::after {
+    content: '✨';
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    color: #FFD700;
+    font-size: 16px;
+    transform: rotate(8deg);
+    opacity: 0.8;
+    text-shadow: 0 0 4px rgba(255, 215, 0, 0.3);
+    animation: sparkle 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes sparkle {
+    0%, 100% { opacity: 0.8; transform: rotate(8deg) scale(1); }
+    50% { opacity: 0.9; transform: rotate(8deg) scale(1.1); }
+  }
+  
+  /* 标题专用卡片样式 - 不旋转 */
+  .header-card {
+    @apply relative;
+    background: var(--sticky-yellow);
+    background-image: var(--paper-grain);
+    background-size: 25px 25px;
+    border-radius: 2px;
+    box-shadow: var(--sticky-shadow);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    position: relative;
+    /* 标题不旋转！ */
+    transform: none !important;
   }
   
   /* 精美的按钮样式 */
@@ -224,28 +366,62 @@ body {
 }
 
 @layer utilities {
-  .text-foundation {
-    color: var(--foundation-ink);
+  /* 手写文字效果 - 只在卡片内使用 */
+  .text-handwritten {
+    color: var(--ink-black);
+    font-family: "Kalam", "Comic Neue", "Caveat", "Patrick Hand SC", cursive, system-ui;
+    font-weight: 400;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
   }
   
-  .bg-foundation {
-    background: var(--foundation-warm);
+  /* 只有卡片内容才旋转 */
+  .paper-card .text-handwritten {
+    transform: rotate(-0.3deg);
+    display: inline-block;
+  }
+  
+  .text-handwritten-blue {
+    color: var(--ink-blue);
+    font-family: "Comic Neue", "Kalam", cursive;
+  }
+  
+  .text-handwritten-red {
+    color: var(--ink-red);
+    font-family: "Patrick Hand", cursive;
+  }
+  
+  /* 工作坊背景 */
+  .bg-workshop {
+    background: var(--workshop-wall);
   }
   
   .gradient-foundation {
-    background: linear-gradient(135deg, var(--foundation-warm) 0%, var(--foundation-paper) 100%);
+    background: var(--workshop-wall);
+    background-image: 
+      /* 主网格线 */
+      linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px),
+      /* 细网格线 */
+      linear-gradient(rgba(0,0,0,0.01) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.01) 1px, transparent 1px),
+      /* 纸张纹理 */
+      var(--paper-grain);
+    background-size: 
+      100px 100px,  /* 主网格 */
+      100px 100px,
+      20px 20px,    /* 细网格 */
+      20px 20px,
+      40px 40px;    /* 纹理 */
+    background-position: 0 0, 0 0, 0 0, 0 0, 5px 5px;
   }
   
-  /* 高级阴影工具类 */
-  .shadow-paper {
-    box-shadow: var(--paper-shadow);
+  /* 便签阴影工具类 */
+  .shadow-sticky {
+    box-shadow: var(--sticky-shadow);
   }
   
-  .shadow-paper-lg {
-    box-shadow: var(--paper-shadow-lg);
-  }
-  
-  .shadow-paper-xl {
-    box-shadow: var(--paper-shadow-xl);
+  .shadow-sticky-hover {
+    box-shadow: var(--sticky-hover);
   }
 }

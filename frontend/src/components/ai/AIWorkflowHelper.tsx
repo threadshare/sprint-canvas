@@ -14,6 +14,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface AIWorkflowHelperProps {
   phase: 'foundation' | 'differentiation' | 'approach';
@@ -21,6 +22,8 @@ interface AIWorkflowHelperProps {
   data: any;
   context: string;
   className?: string;
+  onOpenAIPanel?: (agentType: 'think' | 'critique' | 'research', initialMessage?: string) => void;
+  onDataChange?: (data: any) => void;
 }
 
 export const AIWorkflowHelper: React.FC<AIWorkflowHelperProps> = ({
@@ -29,10 +32,14 @@ export const AIWorkflowHelper: React.FC<AIWorkflowHelperProps> = ({
   data,
   context,
   className,
+  onOpenAIPanel,
+  onDataChange,
 }) => {
+  const { t } = useLanguage();
   const [activeSuggestions, setActiveSuggestions] = useState<string[]>([]);
   const [dismissedSuggestions, setDismissedSuggestions] = useState<Set<string>>(new Set());
   const [aiPanelOpen, setAiPanelOpen] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<'think' | 'critique' | 'research' | null>(null);
 
   // Determine which AI suggestions should be active based on context and data
   useEffect(() => {
@@ -87,11 +94,21 @@ export const AIWorkflowHelper: React.FC<AIWorkflowHelperProps> = ({
     setActiveSuggestions(prev => prev.filter(s => s !== type));
   };
 
+  const handleApplySuggestion = (suggestionData: any) => {
+    // 根据不同阶段和建议类型，应用建议到对应的数据结构
+    if (onDataChange && data) {
+      // 这里可以根据具体的建议内容解析并更新数据
+      // 示例：将建议添加到相应的字段
+      console.log('Applying suggestion:', suggestionData);
+      // TODO: 实现具体的建议应用逻辑
+    }
+  };
+
   const getPhaseName = (phase: string) => {
     const names = {
-      foundation: '基础阶段',
-      differentiation: '差异化阶段',
-      approach: '方法阶段',
+      foundation: t('foundation.stageTitle'),
+      differentiation: t('differentiation.title'),
+      approach: t('approach.title'),
     };
     return names[phase as keyof typeof names] || phase;
   };
@@ -144,10 +161,10 @@ export const AIWorkflowHelper: React.FC<AIWorkflowHelperProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-gray-800">
-                AI 助手 - {getPhaseName(phase)}
+                {t('ai.assistant')} - {getPhaseName(phase)}
               </span>
               <Badge variant="secondary" className="text-xs">
-                {activeSuggestions.length} 条建议
+                {activeSuggestions.length} {t('ai.suggestions')}
               </Badge>
             </div>
             <div className="flex items-center gap-2 mt-1">
@@ -158,7 +175,7 @@ export const AIWorkflowHelper: React.FC<AIWorkflowHelperProps> = ({
                 />
               </div>
               <span className="text-xs text-gray-500">
-                {Math.round(progress * 100)}% 完成
+                {Math.round(progress * 100)}% {t('ai.complete')}
               </span>
             </div>
           </div>
@@ -168,30 +185,43 @@ export const AIWorkflowHelper: React.FC<AIWorkflowHelperProps> = ({
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="text-xs">
               <MessageCircle className="h-4 w-4 mr-1" />
-              AI 对话
+              {t('ai.dialog')}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80" side="left">
             <div className="space-y-3">
-              <h4 className="font-medium text-sm">选择 AI 助手</h4>
+              <h4 className="font-medium text-sm">{t('ai.selectAssistant')}</h4>
               <div className="grid grid-cols-1 gap-2">
-                {['think', 'critique', 'research'].map((type) => (
-                  <Button
-                    key={type}
-                    variant="outline"
-                    size="sm"
-                    className="justify-start text-xs"
-                    onClick={() => {
-                      // Open individual AI chat
-                      setAiPanelOpen(false);
-                    }}
-                  >
-                    <ChevronRight className="h-3 w-3 mr-1" />
-                    {type === 'think' && '帮我想 - 补充思考'}
-                    {type === 'critique' && '批判我 - 挑战假设'}
-                    {type === 'research' && '查一查 - 深度研究'}
-                  </Button>
-                ))}
+                {['think', 'critique', 'research'].map((type) => {
+                  const isSelected = selectedAgent === type;
+                  return (
+                    <Button
+                      key={type}
+                      variant={isSelected ? "default" : "outline"}
+                      size="sm"
+                      className={cn(
+                        "justify-start text-xs transition-all",
+                        isSelected && "bg-gradient-to-r from-blue-500 to-purple-500 text-white border-purple-400"
+                      )}
+                      onClick={() => {
+                        setSelectedAgent(type as 'think' | 'critique' | 'research');
+                        // Open individual AI chat with the selected agent
+                        if (onOpenAIPanel) {
+                          onOpenAIPanel(type as 'think' | 'critique' | 'research');
+                          setAiPanelOpen(false);
+                        }
+                      }}
+                    >
+                      <ChevronRight className={cn(
+                        "h-3 w-3 mr-1",
+                        isSelected && "text-white"
+                      )} />
+                      {type === 'think' && t('ai.thinkAssistant')}
+                      {type === 'critique' && t('ai.critiqueAssistant')}
+                      {type === 'research' && t('ai.researchAssistant')}
+                    </Button>
+                  );
+                })}
               </div>
             </div>
           </PopoverContent>
@@ -209,6 +239,8 @@ export const AIWorkflowHelper: React.FC<AIWorkflowHelperProps> = ({
             roomId={roomId}
             data={data}
             onDismiss={() => handleDismissSuggestion(type)}
+            onOpenAIPanel={onOpenAIPanel}
+            onApplySuggestion={handleApplySuggestion}
           />
         ))}
       </div>
@@ -220,12 +252,12 @@ export const AIWorkflowHelper: React.FC<AIWorkflowHelperProps> = ({
             <Sparkles className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-sm text-yellow-800 font-medium">
-                💡 小贴士
+                💡 {t('ai.tip')}
               </p>
               <p className="text-xs text-yellow-700 mt-1">
-                {phase === 'foundation' && '先填写客户和问题信息，AI 会自动提供针对性建议'}
-                {phase === 'differentiation' && '添加差异化因素后，AI 会帮助分析竞争优势'}
-                {phase === 'approach' && '列出执行路径后，AI 会协助评估可行性'}
+                {phase === 'foundation' && t('ai.foundationTip')}
+                {phase === 'differentiation' && t('ai.differentiationTip')}
+                {phase === 'approach' && t('ai.approachTip')}
               </p>
             </div>
           </div>

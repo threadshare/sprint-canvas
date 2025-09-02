@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { motion } from 'framer-motion';
 import { Edit3, Save, X, Code, Lightbulb, Package, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface AdvantageItem {
   id: string;
@@ -21,32 +22,32 @@ interface AdvantageCardProps {
   className?: string;
 }
 
-const advantageCategories = [
+const getAdvantageCategories = (t: (key: string) => string) => [
   { 
     value: 'technical' as const, 
-    label: '技术能力', 
-    description: '专业技能、技术专长', 
+    label: t('advantage.technical'), 
+    description: t('advantage.technicalDesc'), 
     icon: Code,
     color: 'blue'
   },
   { 
     value: 'insight' as const, 
-    label: '行业洞察', 
-    description: '独特的市场理解', 
+    label: t('advantage.insight'), 
+    description: t('advantage.insightDesc'), 
     icon: Lightbulb,
     color: 'yellow'
   },
   { 
     value: 'resource' as const, 
-    label: '资源优势', 
-    description: '人脉、渠道、资金等', 
+    label: t('advantage.resource'), 
+    description: t('advantage.resourceDesc'), 
     icon: Package,
     color: 'purple'
   },
   { 
     value: 'motivation' as const, 
-    label: '团队动机', 
-    description: '为什么是我们来做', 
+    label: t('advantage.motivation'), 
+    description: t('advantage.motivationDesc'), 
     icon: Heart,
     color: 'pink'
   },
@@ -54,15 +55,18 @@ const advantageCategories = [
 
 export const AdvantageCard: React.FC<AdvantageCardProps> = ({
   advantage,
-  placeholder = '描述一个独特优势...',
+  placeholder,
   readOnly = false,
   onSave,
   onDelete,
   className,
 }) => {
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(!advantage);
   const [description, setDescription] = useState(advantage?.description || '');
   const [category, setCategory] = useState<'technical' | 'insight' | 'resource' | 'motivation'>(advantage?.category || 'technical');
+  const advantageCategories = getAdvantageCategories(t);
+  const defaultPlaceholder = placeholder || t('foundation.addAdvantage');
 
   const handleSave = () => {
     if (!description.trim()) return;

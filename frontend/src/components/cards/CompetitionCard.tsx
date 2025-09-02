@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { motion } from 'framer-motion';
 import { Edit3, Save, X, Target, Repeat, Wrench } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CompetitionItem {
   id: string;
@@ -23,25 +24,25 @@ interface CompetitionCardProps {
   className?: string;
 }
 
-const competitionTypes = [
+const getCompetitionTypes = (t: (key: string) => string) => [
   { 
     value: 'direct' as const, 
-    label: '直接竞争者', 
-    description: '同类产品/服务', 
+    label: t('competition.direct'), 
+    description: t('competition.directDesc'), 
     icon: Target,
     color: 'red'
   },
   { 
     value: 'alternative' as const, 
-    label: '替代方案', 
-    description: '不同形式的解决方案', 
+    label: t('competition.alternative'), 
+    description: t('competition.alternativeDesc'), 
     icon: Repeat,
     color: 'blue'
   },
   { 
     value: 'workaround' as const, 
-    label: '土办法', 
-    description: '用户的变通方法', 
+    label: t('competition.workaround'), 
+    description: t('competition.workaroundDesc'), 
     icon: Wrench,
     color: 'green'
   },
@@ -49,16 +50,19 @@ const competitionTypes = [
 
 export const CompetitionCard: React.FC<CompetitionCardProps> = ({
   competition,
-  placeholder = '描述一个竞争对手或替代方案...',
+  placeholder,
   readOnly = false,
   onSave,
   onDelete,
   className,
 }) => {
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(!competition);
   const [name, setName] = useState(competition?.name || '');
   const [type, setType] = useState<'direct' | 'alternative' | 'workaround'>(competition?.type || 'direct');
   const [description, setDescription] = useState(competition?.description || '');
+  const competitionTypes = getCompetitionTypes(t);
+  const defaultPlaceholder = placeholder || t('foundation.addCompetitor');
 
   const handleSave = () => {
     if (!name.trim()) return;

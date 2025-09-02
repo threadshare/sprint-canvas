@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Trash2, Edit3, Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface EditableCardProps {
   id?: string;
@@ -35,13 +36,15 @@ const variantTextColors = {
 export const EditableCard: React.FC<EditableCardProps> = ({
   id,
   initialText = '',
-  placeholder = '点击编辑...',
+  placeholder,
   onSave,
   onDelete,
   readOnly = false,
   variant = 'default',
   className,
 }) => {
+  const { t } = useLanguage();
+  const defaultPlaceholder = placeholder || t('common.clickToEdit');
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(initialText);
   const [tempText, setTempText] = useState(initialText);
@@ -145,7 +148,7 @@ export const EditableCard: React.FC<EditableCardProps> = ({
               variantTextColors[variant],
               !text && 'text-gray-400 italic'
             )}>
-              {text || placeholder}
+              {text || defaultPlaceholder}
             </div>
             
             {!readOnly && (

@@ -19,7 +19,7 @@ var upgrader = websocket.Upgrader{
 // WebSocket 连接管理
 type Hub struct {
 	// 房间ID -> 连接集合
-	rooms map[string]map[*websocket.Conn]bool
+	rooms map[string]map[*Connection]bool
 	
 	// 注册新连接
 	register chan *Connection
@@ -48,7 +48,7 @@ type Message struct {
 
 // 全局 Hub 实例
 var hub = &Hub{
-	rooms:      make(map[string]map[*websocket.Conn]bool),
+	rooms:      make(map[string]map[*Connection]bool),
 	register:   make(chan *Connection),
 	unregister: make(chan *Connection),
 	broadcast:  make(chan *Message),
@@ -64,12 +64,12 @@ func (h *Hub) run() {
 		select {
 		case conn := <-h.register:
 			if h.rooms[conn.roomID] == nil {
-				h.rooms[conn.roomID] = make(map[*websocket.Conn]bool)
+				h.rooms[conn.roomID] = make(map[*Connection]bool)
 			}
-			h.rooms[conn.roomID][conn.ws] = true
+			h.rooms[conn.roomID][conn] = true
 			log.Printf("User %s connected to room %s", conn.userID, conn.roomID)
 			
-			// 广播用户加入消息给房间内其他用户
+			// 广播用户加入消息给房间内所有用户（包括自己）
 			joinMsg := &Message{
 				RoomID: conn.roomID,
 				Type:   "user_join",
@@ -80,10 +80,29 @@ func (h *Hub) run() {
 			}
 			h.broadcast <- joinMsg
 			
+			// 发送当前房间所有用户列表给新加入的用户
+			var users []map[string]interface{}
+			for c := range h.rooms[conn.roomID] {
+				users = append(users, map[string]interface{}{
+					"userId":   c.userID,
+					"userName": c.userName,
+				})
+			}
+			userListMsg := &Message{
+				RoomID: conn.roomID,
+				Type:   "user_list",
+				Data:   map[string]interface{}{"users": users},
+			}
+			// 只发给新加入的用户
+			err := conn.ws.WriteJSON(userListMsg)
+			if err != nil {
+				log.Printf("Failed to send user list: %v", err)
+			}
+			
 		case conn := <-h.unregister:
 			if connections, exists := h.rooms[conn.roomID]; exists {
-				if _, exists := connections[conn.ws]; exists {
-					delete(connections, conn.ws)
+				if _, exists := connections[conn]; exists {
+					delete(connections, conn)
 					conn.ws.Close()
 					log.Printf("User %s disconnected from room %s", conn.userID, conn.roomID)
 					
@@ -103,10 +122,10 @@ func (h *Hub) run() {
 		case message := <-h.broadcast:
 			if connections, exists := h.rooms[message.RoomID]; exists {
 				for conn := range connections {
-					err := conn.WriteJSON(message)
+					err := conn.ws.WriteJSON(message)
 					if err != nil {
 						log.Printf("WebSocket write error: %v", err)
-						conn.Close()
+						conn.ws.Close()
 						delete(connections, conn)
 					}
 				}

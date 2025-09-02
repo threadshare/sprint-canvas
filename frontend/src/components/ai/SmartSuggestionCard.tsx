@@ -26,6 +26,8 @@ interface SmartSuggestionCardProps {
   trigger?: string; // When to show the suggestion
   className?: string;
   onDismiss?: () => void;
+  onOpenAIPanel?: (agentType: 'think' | 'critique' | 'research', initialMessage?: string) => void;
+  onApplySuggestion?: (suggestion: any) => void;
 }
 
 const agentConfig = {
@@ -67,6 +69,8 @@ export const SmartSuggestionCard: React.FC<SmartSuggestionCardProps> = ({
   trigger,
   className,
   onDismiss,
+  onOpenAIPanel,
+  onApplySuggestion,
 }) => {
   const [suggestion, setSuggestion] = useState<AgentResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -176,6 +180,25 @@ export const SmartSuggestionCard: React.FC<SmartSuggestionCardProps> = ({
     onDismiss?.();
   };
 
+  const handleDetailedDiscussion = () => {
+    if (onOpenAIPanel && suggestion) {
+      // 打开 AI 面板并传递当前建议作为初始消息
+      onOpenAIPanel(type, suggestion.response);
+    }
+  };
+
+  const handleApplySuggestion = () => {
+    if (onApplySuggestion && suggestion) {
+      // 将建议应用到当前内容
+      onApplySuggestion({
+        type,
+        suggestion: suggestion.response,
+        suggestions: suggestion.suggestions,
+        phase,
+      });
+    }
+  };
+
   if (dismissed || !suggestion) {
     return null;
   }
@@ -272,11 +295,21 @@ export const SmartSuggestionCard: React.FC<SmartSuggestionCardProps> = ({
 
                 {/* Actions */}
                 <div className="flex gap-2 pt-2">
-                  <Button size="sm" variant="outline" className="text-xs">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="text-xs"
+                    onClick={handleDetailedDiscussion}
+                  >
                     <MessageSquare className="h-3 w-3 mr-1" />
                     详细讨论
                   </Button>
-                  <Button size="sm" variant="outline" className="text-xs">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="text-xs"
+                    onClick={handleApplySuggestion}
+                  >
                     应用建议
                   </Button>
                 </div>

@@ -97,6 +97,25 @@ const convertToFrontendApproachData = (approach: any) => {
 function App() {
   const { t } = useLanguage()
   
+  // Load persisted session data from localStorage
+  const loadSessionData = () => {
+    const sessionData = localStorage.getItem('foundationSprintSession')
+    if (sessionData) {
+      try {
+        const parsed = JSON.parse(sessionData)
+        return {
+          roomId: parsed.roomId,
+          userId: parsed.userId,
+          userName: parsed.userName
+        }
+      } catch (e) {
+        console.error('Failed to parse session data:', e)
+        localStorage.removeItem('foundationSprintSession')
+      }
+    }
+    return null
+  }
+  
   // Room state
   const [currentRoom, setCurrentRoom] = useState<Room | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string>('')
@@ -114,7 +133,7 @@ function App() {
   // URL room ID for invitation links
   const [urlRoomId, setUrlRoomId] = useState<string | null>(null)
 
-  // Check URL parameters on load
+  // Check URL parameters and restore session on load
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const roomIdFromUrl = urlParams.get('roomId')
@@ -122,12 +141,62 @@ function App() {
     if (roomIdFromUrl) {
       console.log('Room ID from URL:', roomIdFromUrl)
       setUrlRoomId(roomIdFromUrl)
+      return // Don't restore session if we have a URL room ID
+    }
+    
+    // Try to restore previous session
+    const sessionData = loadSessionData()
+    if (sessionData && sessionData.roomId && sessionData.userId && sessionData.userName) {
+      console.log('Restoring session:', sessionData)
+      setLoading(true)
+      
+      // Try to rejoin the room
+      apiClient.getRoom(sessionData.roomId)
+        .then(room => {
+          console.log('Successfully restored room:', room.id)
+          setCurrentRoom(room)
+          setCurrentUserId(sessionData.userId)
+          setCurrentUserName(sessionData.userName)
+          setError(null)
+          setParticipants([])
+        })
+        .catch(error => {
+          console.error('Failed to restore room:', error)
+          // Clear invalid session data
+          localStorage.removeItem('foundationSprintSession')
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     }
   }, [])
 
   // WebSocket connection management
   useEffect(() => {
-    if (!currentRoom || !currentUserId) return
+    console.log('🔌 WebSocket useEffect triggered:', { 
+      hasRoom: !!currentRoom, 
+      roomId: currentRoom?.id,
+      userId: currentUserId,
+      userName: currentUserName,
+      roomStatus: currentRoom?.status,
+      timestamp: new Date().toISOString()
+    });
+    
+    if (!currentRoom || !currentUserId || !currentUserName) {
+      console.log('⏭️ WebSocket connection skipped - missing params:', {
+        currentRoom: !!currentRoom,
+        currentUserId: !!currentUserId,
+        currentUserName: !!currentUserName,
+        actualValues: {
+          roomId: currentRoom?.id || 'null',
+          userId: currentUserId || 'null',
+          userName: currentUserName || 'null'
+        }
+      });
+      return;
+    }
+    
+    console.log('✅ All params present, connecting to WebSocket...')
 
     const handleConnect = () => {
       console.log('🟢 WebSocket连接成功:', {
@@ -157,11 +226,22 @@ function App() {
       
       switch (message.type) {
         case 'user_join':
-          setParticipants(prev => [...prev.filter(p => p.id !== message.data.userId), {
-            id: message.data.userId,
-            name: message.data.userName,
-            online: true,
-          }])
+          // 添加新用户到参与者列表（避免重复）
+          setParticipants(prev => {
+            const exists = prev.some(p => p.id === message.data.userId);
+            if (exists) {
+              return prev.map(p => 
+                p.id === message.data.userId 
+                  ? { ...p, online: true }
+                  : p
+              );
+            }
+            return [...prev, {
+              id: message.data.userId,
+              name: message.data.userName,
+              online: true,
+            }];
+          })
           break
         
         case 'user_leave':
@@ -170,6 +250,17 @@ function App() {
               ? { ...p, online: false }
               : p
           ))
+          break
+        
+        case 'user_list':
+          // 收到完整的用户列表（新用户加入时会收到）
+          if (message.data.users) {
+            setParticipants(message.data.users.map((user: any) => ({
+              id: user.userId,
+              name: user.userName,
+              online: true,
+            })));
+          }
           break
         
         case 'foundation_update':
@@ -206,31 +297,55 @@ function App() {
 
     // Cleanup
     return () => {
+      console.log('🧹 Cleaning up WebSocket useEffect')
       webSocketService.off('connect', handleConnect)
       webSocketService.off('disconnect', handleDisconnect)
       webSocketService.off('message', handleMessage)
       webSocketService.off('error', handleError)
-      webSocketService.disconnect()
     }
   }, [currentRoom?.id, currentUserId, currentUserName]) // 依赖roomId、userId和userName
+
+  // Separate effect for disconnecting when leaving room
+  useEffect(() => {
+    // Disconnect when room changes or component unmounts
+    return () => {
+      if (!currentRoom) {
+        console.log('🔌 Disconnecting WebSocket - no room')
+        webSocketService.disconnect()
+      }
+    }
+  }, [currentRoom])
 
   // 移除refreshRoomData，直接在需要的地方调用API
 
   const handleRoomJoined = (room: Room, userId: string, userName: string) => {
+    console.log('🏠 handleRoomJoined called with:', {
+      roomId: room.id,
+      userId,
+      userName,
+      roomStatus: room.status
+    })
+    
     setCurrentRoom(room)
     setCurrentUserId(userId)
     setCurrentUserName(userName)
     setError(null)
     
-    // Add current user to participants
-    setParticipants([{
-      id: userId,
-      name: userName,
-      online: true,
-    }])
+    // Don't set participants here - wait for WebSocket connection
+    // The user list will be sent when we connect
+    setParticipants([])
+    
+    // Save session data to localStorage
+    localStorage.setItem('foundationSprintSession', JSON.stringify({
+      roomId: room.id,
+      userId,
+      userName
+    }))
 
     // Clear URL parameters
     window.history.replaceState({}, '', window.location.pathname)
+    
+    console.log('🏠 State set, should trigger WebSocket connection...')
   }
 
   const handleLeaveRoom = () => {
@@ -241,6 +356,9 @@ function App() {
     setIsConnected(false)
     setParticipants([])
     setError(null)
+    
+    // Clear session data when leaving room
+    localStorage.removeItem('foundationSprintSession')
   }
 
 
@@ -409,6 +527,7 @@ function App() {
                   roomId={currentRoom.id}
                   currentUserId={currentUserId}
                   currentUserName={currentUserName}
+                  participants={participants}
                   onDataChange={handleFoundationDataChange}
                   onNextStage={() => handleNextStage('differentiation')}
                 />

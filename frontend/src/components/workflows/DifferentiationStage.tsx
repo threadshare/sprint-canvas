@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { EditableCard } from '@/components/cards/EditableCard';
 import { Matrix2x2Card } from '@/components/cards/Matrix2x2Card';
+import { AIWorkflowHelper } from '@/components/ai/AIWorkflowHelper';
 import { Plus, Target, Zap, Award, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -213,13 +214,23 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
         </CardContent>
       </Card>
 
-      {/* 步骤1: 经典差异化因素 */}
+      {/* AI 工作流助手 */}
+      {roomId && (
+        <AIWorkflowHelper
+          phase="differentiation"
+          roomId={roomId}
+          data={data}
+          context={`当前阶段: differentiation, 经典因素: ${data.classicFactors.map(f => f.name).join(', ')}, 自定义因素: ${data.customFactors.map(f => f.name).join(', ')}, 原则: ${data.principles.join(', ')}`}
+        />
+      )}
+
+      {/* Step 1: Classic Factors */}
       {currentStep === 'classic' && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Zap className="h-5 w-5" />
-              步骤1: 经典差异化因素热身
+              {t('differentiation.classicFactors')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -278,20 +289,20 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
                 onClick={() => setCurrentStep('custom')}
                 className="bg-purple-600 hover:bg-purple-700"
               >
-                下一步: 自定义因素
+                {t('differentiation.nextCustomFactors')}
               </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* 步骤2: 自定义差异化因素 */}
+      {/* Step 2: Custom Factors */}
       {currentStep === 'custom' && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />
-              步骤2: 创建自定义差异化因素
+              {t('differentiation.customFactors')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -331,21 +342,21 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
                 variant="outline"
                 onClick={() => setCurrentStep('classic')}
               >
-                上一步
+                {t('common.previous')}
               </Button>
               <Button 
                 onClick={createMatrix}
                 disabled={data.customFactors.length === 0}
                 className="bg-purple-600 hover:bg-purple-700"
               >
-                下一步: 创建矩阵
+                {t('differentiation.nextCreateMatrix')}
               </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* 步骤3: 2x2 矩阵 */}
+      {/* Step 3: Matrix */}
       {currentStep === 'matrix' && (
         <div className="space-y-6">
           <Matrix2x2Card
@@ -370,13 +381,13 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
               variant="outline"
               onClick={() => setCurrentStep('custom')}
             >
-              上一步
+              {t('common.previous')}
             </Button>
             <Button 
               onClick={() => setCurrentStep('principles')}
               className="bg-purple-600 hover:bg-purple-700"
             >
-              下一步: 提炼原则
+              {t('differentiation.nextPrinciples')}
             </Button>
           </div>
         </div>
@@ -388,7 +399,7 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Award className="h-5 w-5" />
-              步骤4: 提炼项目原则
+              {t('differentiation.step4Title')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -427,7 +438,7 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
                 variant="outline"
                 onClick={() => setCurrentStep('matrix')}
               >
-                上一步
+                {t('common.previous')}
               </Button>
               {!readOnly && (
                 <Button
@@ -435,7 +446,7 @@ export const DifferentiationStage: React.FC<DifferentiationStageProps> = ({
                   disabled={!isStageComplete()}
                   className="bg-green-600 hover:bg-green-700"
                 >
-                  下一阶段: 确定方法
+                  {t('differentiation.nextStageApproach')}
                 </Button>
               )}
             </div>

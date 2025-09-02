@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { EditableCard } from '@/components/cards/EditableCard';
 import { MagicLensCard } from '@/components/cards/MagicLensCard';
+import { AIWorkflowHelper } from '@/components/ai/AIWorkflowHelper';
 import { 
   Route, 
   Users, 
@@ -56,30 +57,30 @@ interface ApproachStageProps {
 }
 
 // 预定义的Magic Lenses
-const defaultLenses = [
+const getDefaultLenses = (t: (key: string) => string) => [
   {
-    name: '客户专家',
-    description: '从客户角度看，哪个方案对他们最友好，最能解决问题？',
+    name: t('approach.lensCustomer'),
+    description: t('approach.lensCustomerDesc'),
     icon: Users,
   },
   {
-    name: '务实专家',
-    description: '从效率角度看，哪个方案开发最快、最省钱，能最快推向市场？',
+    name: t('approach.lensPragmatic'),
+    description: t('approach.lensPragmaticDesc'),
     icon: Zap,
   },
   {
-    name: '增长专家',
-    description: '从获客角度看，哪个方案能最快地吸引到最多用户？',
+    name: t('approach.lensGrowth'),
+    description: t('approach.lensGrowthDesc'),
     icon: TrendingUp,
   },
   {
-    name: '财务专家',
-    description: '从商业角度看，哪个方案能为公司和客户创造最大的长期价值？',
+    name: t('approach.lensFinancial'),
+    description: t('approach.lensFinancialDesc'),
     icon: DollarSign,
   },
   {
-    name: '差异化视角',
-    description: '哪个方案最能体现我们在第二阶段定下的独特优势？',
+    name: t('approach.lensDifferentiation'),
+    description: t('approach.lensDifferentiationDesc'),
     icon: Target,
   },
 ];
@@ -137,6 +138,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
   };
 
   const initializeLenses = () => {
+    const defaultLenses = getDefaultLenses(t);
     const lenses: MagicLens[] = defaultLenses.map(lens => ({
       name: lens.name,
       description: lens.description,
@@ -263,7 +265,17 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
         </CardContent>
       </Card>
 
-      {/* 步骤1: 执行路径 */}
+      {/* AI 工作流助手 */}
+      {roomId && (
+        <AIWorkflowHelper
+          phase="approach"
+          roomId={roomId}
+          data={data}
+          context={`当前阶段: approach, 执行路径: ${data.paths.map(p => p.name).join(', ')}, 选中路径: ${data.selectedPath}, 魔法透镜: ${data.magicLenses.map(l => l.name).join(', ')}`}
+        />
+      )}
+
+      {/* Step 1: Paths */}
       {currentStep === 'paths' && (
         <Card>
           <CardHeader>
@@ -293,7 +305,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
                           onClick={() => deletePath(path.id)}
                           className="text-red-500 hover:text-red-700 hover:bg-red-50"
                         >
-                          删除
+                          {t('common.delete')}
                         </Button>
                       )}
                     </div>
@@ -302,7 +314,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
                   <CardContent className="space-y-4">
                     {/* 优点 */}
                     <div>
-                      <h5 className="text-sm font-medium text-green-700 mb-2">优点:</h5>
+                      <h5 className="text-sm font-medium text-green-700 mb-2">{t('approach.pros')}:</h5>
                       <div className="space-y-2">
                         {path.pros.map((pro, index) => (
                           <div key={index} className="text-sm text-green-600 bg-green-50 p-2 rounded">
@@ -311,7 +323,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
                         ))}
                         {!readOnly && (
                           <EditableCard
-                            placeholder="添加一个优点..."
+                            placeholder={t('approach.addPro')}
                             variant="advantage"
                             className="min-h-[60px]"
                             onSave={(text) => {
@@ -326,7 +338,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
                     
                     {/* 缺点 */}
                     <div>
-                      <h5 className="text-sm font-medium text-red-700 mb-2">缺点:</h5>
+                      <h5 className="text-sm font-medium text-red-700 mb-2">{t('approach.cons')}:</h5>
                       <div className="space-y-2">
                         {path.cons.map((con, index) => (
                           <div key={index} className="text-sm text-red-600 bg-red-50 p-2 rounded">
@@ -335,7 +347,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
                         ))}
                         {!readOnly && (
                           <EditableCard
-                            placeholder="添加一个缺点..."
+                            placeholder={t('approach.addCon')}
                             variant="problem"
                             className="min-h-[60px]"
                             onSave={(text) => {
@@ -354,7 +366,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
               {/* 添加新路径 */}
               {!readOnly && (
                 <EditableCard
-                  placeholder="路径名称&#10;描述这个执行方案的具体内容..."
+                  placeholder={t('approach.addPathPlaceholder')}
                   variant="default"
                   className="min-h-[200px]"
                   onSave={(text) => {
@@ -375,33 +387,33 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
                 disabled={data.paths.length === 0}
                 className="bg-green-600 hover:bg-green-700"
               >
-                下一步: Magic Lenses 评估
+                {t('approach.nextMagicLenses')}
               </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* 步骤2: Magic Lenses 评估 */}
+      {/* Step 2: Magic Lenses */}
       {currentStep === 'lenses' && (
         <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Target className="h-5 w-5" />
-                步骤2: Magic Lenses 多角度评估
+                {t('approach.magicLensesTitle')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                现在使用"Magic Lenses"工具，从不同专家的角度来评估每个路径。
-                每个镜头代表一种重要的决策视角。
+                {t('approach.magicLensesDesc')}
               </p>
             </CardContent>
           </Card>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {data.magicLenses.map((lens, index) => {
+              const defaultLenses = getDefaultLenses(t);
               const lensConfig = defaultLenses[index];
               return (
                 <MagicLensCard
@@ -426,35 +438,35 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
               variant="outline"
               onClick={() => setCurrentStep('paths')}
             >
-              上一步
+              {t('common.previous')}
             </Button>
             <Button 
               onClick={() => setCurrentStep('decision')}
               className="bg-green-600 hover:bg-green-700"
             >
-              下一步: 最终决策
+              {t('approach.nextFinalDecision')}
             </Button>
           </div>
         </div>
       )}
 
-      {/* 步骤3: 最终决策 */}
+      {/* Step 3: Decision */}
       {currentStep === 'decision' && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Heart className="h-5 w-5" />
-              步骤3: 最终决策
+              {t('approach.selectedPathTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <p className="text-sm text-gray-600">
-              基于Magic Lenses的评估结果，选择最佳执行路径并说明理由。
+              {t('approach.finalDecisionDesc')}
             </p>
             
             {/* 评估结果总览 */}
             <div className="space-y-4">
-              <h4 className="font-medium">评估结果总览:</h4>
+              <h4 className="font-medium">{t('approach.evaluationSummary')}:</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {data.paths.map((path) => {
                   const score = getPathScore(path.id);
@@ -490,13 +502,13 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
                       
                       {isTop && !isSelected && (
                         <div className="text-xs text-blue-600 font-medium">
-                          🏆 评分最高
+                          🏆 {t('approach.highestScore')}
                         </div>
                       )}
                       
                       {isSelected && (
                         <div className="text-xs text-green-600 font-medium">
-                          ✓ 已选择
+                          ✓ {t('approach.selected')}
                         </div>
                       )}
                     </div>
@@ -507,10 +519,10 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
             
             {/* 选择理由 */}
             <div className="space-y-3">
-              <h4 className="font-medium">选择理由:</h4>
+              <h4 className="font-medium">{t('approach.reasoningTitle')}:</h4>
               <EditableCard
                 initialText={data.reasoning}
-                placeholder="说明为什么选择这个路径。哪个Magic Lens的评估最重要？为什么？"
+                placeholder={t('approach.reasoningPlaceholder')}
                 className="min-h-[120px]"
                 readOnly={readOnly}
                 onSave={(text) => {
@@ -524,7 +536,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
                 variant="outline"
                 onClick={() => setCurrentStep('lenses')}
               >
-                上一步
+                {t('common.previous')}
               </Button>
               {!readOnly && (
                 <Button
@@ -532,7 +544,7 @@ export const ApproachStage: React.FC<ApproachStageProps> = ({
                   disabled={!isStageComplete()}
                   className="bg-blue-600 hover:bg-blue-700"
                 >
-                  完成 Foundation Sprint
+                  {t('approach.completeFoundationSprint')}
                 </Button>
               )}
             </div>

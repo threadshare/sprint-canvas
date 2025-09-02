@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
 import { Edit3, Save, X, AlertCircle, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProblemItem {
   id: string;
@@ -22,25 +23,28 @@ interface ProblemCardProps {
   className?: string;
 }
 
-const impactOptions = [
-  { value: 'few' as const, label: '少数用户', description: '< 25%', color: 'yellow' },
-  { value: 'some' as const, label: '部分用户', description: '25-50%', color: 'orange' },
-  { value: 'many' as const, label: '多数用户', description: '50-75%', color: 'red' },
-  { value: 'most' as const, label: '绝大多数', description: '> 75%', color: 'purple' },
+const getImpactOptions = (t: (key: string) => string) => [
+  { value: 'few' as const, label: t('problem.impactFew'), description: '< 25%', color: 'yellow' },
+  { value: 'some' as const, label: t('problem.impactSome'), description: '25-50%', color: 'orange' },
+  { value: 'many' as const, label: t('problem.impactMany'), description: '50-75%', color: 'red' },
+  { value: 'most' as const, label: t('problem.impactMost'), description: '> 75%', color: 'purple' },
 ];
 
 export const ProblemCard: React.FC<ProblemCardProps> = ({
   problem,
-  placeholder = '描述一个具体问题...',
+  placeholder,
   readOnly = false,
   onSave,
   onDelete,
   className,
 }) => {
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(!problem);
   const [description, setDescription] = useState(problem?.description || '');
   const [severity, setSeverity] = useState(problem?.severity || 5);
   const [impact, setImpact] = useState<'few' | 'some' | 'many' | 'most'>(problem?.impact || 'some');
+  const impactOptions = getImpactOptions(t);
+  const defaultPlaceholder = placeholder || t('problem.addProblem');
 
   const handleSave = () => {
     if (!description.trim()) return;
@@ -89,13 +93,13 @@ export const ProblemCard: React.FC<ProblemCardProps> = ({
           <CardContent className="p-4 space-y-4">
             <div className="flex items-center gap-2 text-orange-700">
               <AlertCircle className="h-4 w-4" />
-              <span className="text-sm font-medium">问题描述</span>
+              <span className="text-sm font-medium">{t('problem.description')}</span>
             </div>
             
             <Input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder={placeholder}
+              placeholder={defaultPlaceholder}
               className="border-orange-300 focus:border-orange-500"
               multiline
             />
