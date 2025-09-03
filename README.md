@@ -178,6 +178,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - Google Ventures for the Foundation Sprint methodology
+- **Inspiration Source**: [Foundation Sprint: 10小时达成核心战略共识的方法论](https://mp.weixin.qq.com/s/ojYu5QvYmynI450ilYCy5w) - I believe this thinking methodology is very scientific, so I wanted to empower this process using deterministic workflows + subAgents. May all those with ideas enjoy this software. / 我认为这种思考方式非常科学，就想着使用确定性的流程+subAgent 来赋能这个事情。愿所有的有想法的人 enjoy 这个软件。
 - The open-source community for the amazing tools and libraries
 
 ## 📞 Support
