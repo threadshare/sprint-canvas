@@ -2,6 +2,12 @@
 
 A collaborative product strategy tool based on Google Ventures' Foundation Sprint methodology. Helps founding teams achieve core strategic consensus in 10 hours through structured thinking and rapid idea validation.
 
+## 🎥 Demo
+
+https://user-images.githubusercontent.com/demo/foundation_sprint_demo.mp4
+
+*A 2-minute overview showing the complete Foundation Sprint workflow from team setup to strategic consensus.*
+
 ## 🚀 Quick Start
 
 ```bash
