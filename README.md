@@ -4,11 +4,9 @@ A collaborative product strategy tool based on Google Ventures' Foundation Sprin
 
 ## 🎥 Demo
 
-![Demo Video](./demo/foundation_sprint_demo.mp4)
+https://github.com/user-attachments/assets/37158693-a766-4a04-b72f-15e1dccbeb4b
 
 *A 2-minute overview showing the complete Foundation Sprint workflow from team setup to strategic consensus.*
-
-> **Note:** Click the video above to play, or [download it directly](https://github.com/threadshare/sprint-canvas/raw/main/demo/foundation_sprint_demo.mp4).
 
 ## 🚀 Quick Start
 
